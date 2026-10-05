@@ -1,1 +1,1 @@
-# EMI-Entorno-de-Manejo-de-Inventario-Frontend
+# EMI (Entorno-de-Manejo-de-Inventario)
