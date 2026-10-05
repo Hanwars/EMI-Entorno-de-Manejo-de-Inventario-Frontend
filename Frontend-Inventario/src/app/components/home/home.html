@@ -1,0 +1,39 @@
+<div class="container py-5 mt-4">
+  @if (currentUser()) {
+    <div>
+      <h2 class="align-items-center">Bienvenido a EMI {{ currentUser()?.name }}</h2>
+    </div>
+  }
+  <div class="row align-items-center">
+    <div class="col-md-6">
+      <h1 class="display-3 fw-bold">EMI</h1>
+
+      <h2 class="mb-4">Entorno de Manejo de Inventario</h2>
+
+      <p class="lead">
+        Gestiona productos, proveedores, categorías y movimientos de inventario desde una sola
+        plataforma.
+      </p>
+
+      <p class="text-secondary">
+        Lleva el control de tus existencias de manera eficiente, consulta reportes y administra toda
+        la información de tu negocio de forma rápida y segura.
+      </p>
+
+      <div class="mt-5">
+        @if (!currentUser()) {
+          <button class="btn btn-danger btn-lg me-2" [routerLink]="['/login']">Iniciar</button>
+        }
+        <button class="btn btn-outline-danger btn-lg">Conocer más</button>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="">
+        <div class="card-body text-center py-5">
+          <img src="../../../LogoEMI.png" alt="Logo EMI" class="img-fluid" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
