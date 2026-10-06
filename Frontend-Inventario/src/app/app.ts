@@ -1,8 +1,6 @@
-import { Component, signal } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
-/* 
+import { Component, OnDestroy, inject } from '@angular/core';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -10,32 +8,27 @@ import { Router } from '@angular/router';
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
-export class App {
-  protected readonly title = signal('Frontend-Inventario');
-  public currentUser;
-  private checkSessionInterval;
+export class App implements OnDestroy {
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
 
-  constructor(private _auth: AuthService, private router: Router) {
-    this.currentUser = _auth.currentUser;
-    this.checkSessionInterval = setInterval(() => {
-      this.checkSession();
-    }, 1000);
-  }
+  public readonly currentUser = this.auth.currentUser;
 
+  // Revisa cada 30 segundos si la sesión sigue siendo válida
+  private readonly checkSessionInterval = setInterval(() => this.checkSession(), 30_000);
 
-  checkSession() {
-    if (!this._auth.isAuthenticated()) {
-      this._auth.logout();
-      this.currentUser.set(null);
+  checkSession(): void {
+    if (this.currentUser() && !this.auth.isAuthenticated()) {
+      this.logout();
     }
-  
-  
   }
 
-  logout() {
-    this._auth.logout();
-    this.currentUser.set(null);
+  logout(): void {
+    this.auth.logout();
     this.router.navigate(['/login']);
   }
+
+  ngOnDestroy(): void {
+    clearInterval(this.checkSessionInterval);
+  }
 }
-*/
