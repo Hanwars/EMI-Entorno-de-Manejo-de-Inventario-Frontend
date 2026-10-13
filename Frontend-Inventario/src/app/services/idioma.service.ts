@@ -10,8 +10,11 @@ export const IDIOMA_PREDETERMINADO: Idioma = 'es';
 
 @Injectable({ providedIn: 'root' })
 export class IdiomaService {
-  readonly idiomasDisponibles: Idioma[] = ['es', 'en'];
+  readonly idiomasDisponibles: readonly Idioma[] = ['es', 'en'];
+
   readonly idiomaActual = signal<Idioma>(IDIOMA_PREDETERMINADO);
+
+  private colaCambios: Promise<void> = Promise.resolve();
 
   constructor(private readonly translate: TranslateService) {}
 
@@ -25,8 +28,8 @@ export class IdiomaService {
     }
 
     const idiomaNavegador =
-      typeof navigator !== 'undefined'
-        ? navigator.language.slice(0, 2).toLowerCase()
+      typeof navigator !== 'undefined' && navigator.language
+        ? navigator.language.split('-')[0].toLowerCase()
         : IDIOMA_PREDETERMINADO;
 
     const inicial = this.esIdiomaValido(guardado)
@@ -43,25 +46,42 @@ export class IdiomaService {
       return;
     }
 
-    try {
-      await firstValueFrom(this.translate.use(idioma));
-      this.idiomaActual.set(idioma);
-
-      if (typeof document !== 'undefined') {
-        document.documentElement.lang = idioma;
-      }
-
+    const cambio = this.colaCambios.then(async () => {
       try {
-        localStorage.setItem(CLAVE_IDIOMA, idioma);
-      } catch {
-        // El idioma permanece activo durante esta sesión aunque no se pueda guardar.
+        await firstValueFrom(this.translate.use(idioma));
+
+        this.idiomaActual.set(idioma);
+
+        if (typeof document !== 'undefined') {
+          document.documentElement.lang = idioma;
+        }
+
+        try {
+          localStorage.setItem(CLAVE_IDIOMA, idioma);
+        } catch {
+          // El idioma permanece activo durante esta sesión aunque no se pueda guardar.
+        }
+      } catch (error) {
+        console.error(
+          `No se pudo cargar el idioma "${idioma}".`,
+          error
+        );
       }
-    } catch (error) {
-      console.error(`No se pudo cargar el idioma "${idioma}".`, error);
-    }
+    });
+
+    this.colaCambios = cambio;
+
+    await cambio;
   }
 
-  private esIdiomaValido(idioma: string | null): idioma is Idioma {
-    return idioma !== null && this.idiomasDisponibles.includes(idioma as Idioma);
+  private esIdiomaValido(
+    idioma: string | null
+  ): idioma is Idioma {
+    return (
+      idioma !== null &&
+      this.idiomasDisponibles.some(
+        disponible => disponible === idioma
+      )
+    );
   }
 }
