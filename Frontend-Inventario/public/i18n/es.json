@@ -1,0 +1,103 @@
+{
+  "app": {
+    "title": "EMI",
+    "fullTitle": "Entorno de Manejo de Inventario",
+    "loading": "Cargando...",
+    "home": "Inicio",
+    "systemDescription": "Sistema de gestión de inventarios"
+  },
+  "navigation": {
+    "supplies": "Insumos",
+    "categories": "Categorías",
+    "suppliers": "Proveedores",
+    "clients": "Clientes",
+    "purchases": "Compras",
+    "profile": "Perfil de usuario",
+    "roles": "Administrar roles",
+    "users": "Administrar usuarios",
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar sesión"
+  },
+  "home": {
+    "welcome": "Bienvenido a EMI {{name}}",
+    "description": "Gestiona productos, proveedores, categorías y movimientos de inventario desde una sola plataforma.",
+    "details": "Lleva el control de tus existencias de manera eficiente, consulta reportes y administra toda la información de tu negocio de forma rápida y segura.",
+    "start": "Comenzar",
+    "learnMore": "Conocer más",
+    "logoAlt": "Logo de EMI"
+  },
+  "error": {
+    "title": "Página no encontrada",
+    "description": "La página que intentas visitar no existe o fue movida.",
+    "backHome": "Volver al inicio"
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "logout": "Cerrar sesión",
+    "register": "Registrarse",
+    "invalidCredentials": "Credenciales inválidas o sesión expirada."
+  },
+  "users": {
+    "title": "Usuarios",
+    "create": "Crear usuario",
+    "edit": "Editar usuario",
+    "delete": "Eliminar usuario"
+  },
+  "inventory": {
+    "title": "Inventario",
+    "supplies": "Insumos",
+    "create": "Crear insumo",
+    "search": "Buscar insumo",
+    "categories": "Categorías",
+    "stock": "Existencias"
+  },
+  "suppliers": {
+    "title": "Proveedores",
+    "create": "Crear proveedor",
+    "search": "Buscar proveedor"
+  },
+  "movements": {
+    "title": "Movimientos",
+    "create": "Registrar movimiento",
+    "entries": "Entradas",
+    "exits": "Salidas"
+  },
+  "clients": {
+    "title": "Clientes"
+  },
+  "purchases": {
+    "title": "Compras"
+  },
+  "roles": {
+    "title": "Roles"
+  },
+  "common": {
+    "language": "Idioma",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "search": "Buscar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "close": "Cerrar",
+    "home": "Inicio",
+    "toggleNavigation": "Abrir o cerrar navegación"
+  },
+  "language": {
+    "spanish": "Español",
+    "english": "Inglés"
+  },
+  "errors": {
+    "badRequest": "La solicitud no es válida.",
+    "unauthorized": "No tienes autorización o la sesión expiró.",
+    "notFound": "No se encontró el recurso solicitado.",
+    "server": "Ocurrió un error en el servidor."
+  },
+  "footer": {
+    "copyright": "© 2026 EMI - Entorno de Manejo de Inventario",
+    "description": "Sistema de gestión de inventarios"
+  }
+}

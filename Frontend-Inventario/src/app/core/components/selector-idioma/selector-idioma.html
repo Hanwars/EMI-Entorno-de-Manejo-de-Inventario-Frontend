@@ -1,0 +1,22 @@
+<div class="selector-idioma d-flex align-items-center gap-1" role="group" [attr.aria-label]="'common.language' | translate">
+  <button
+    type="button"
+    class="btn btn-sm"
+    [class.btn-danger]="idiomaService.idiomaActual() === 'es'"
+    [class.btn-outline-secondary]="idiomaService.idiomaActual() !== 'es'"
+    [attr.aria-pressed]="idiomaService.idiomaActual() === 'es'"
+    [attr.aria-label]="'language.spanish' | translate"
+    (click)="cambiarIdioma('es')">
+    ES
+  </button>
+  <button
+    type="button"
+    class="btn btn-sm"
+    [class.btn-danger]="idiomaService.idiomaActual() === 'en'"
+    [class.btn-outline-secondary]="idiomaService.idiomaActual() !== 'en'"
+    [attr.aria-pressed]="idiomaService.idiomaActual() === 'en'"
+    [attr.aria-label]="'language.english' | translate"
+    (click)="cambiarIdioma('en')">
+    EN
+  </button>
+</div>

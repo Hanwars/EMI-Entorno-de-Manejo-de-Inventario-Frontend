@@ -1,0 +1,103 @@
+{
+  "app": {
+    "title": "EMI",
+    "fullTitle": "Inventory Management Environment",
+    "loading": "Loading...",
+    "home": "Home",
+    "systemDescription": "Inventory management system"
+  },
+  "navigation": {
+    "supplies": "Supplies",
+    "categories": "Categories",
+    "suppliers": "Suppliers",
+    "clients": "Clients",
+    "purchases": "Purchases",
+    "profile": "User profile",
+    "roles": "Manage roles",
+    "users": "Manage users",
+    "login": "Log in",
+    "register": "Sign up",
+    "logout": "Log out"
+  },
+  "home": {
+    "welcome": "Welcome to EMI {{name}}",
+    "description": "Manage products, suppliers, categories, and inventory movements from a single platform.",
+    "details": "Keep track of your stock efficiently, view reports, and manage all your business information quickly and securely.",
+    "start": "Get started",
+    "learnMore": "Learn more",
+    "logoAlt": "EMI logo"
+  },
+  "error": {
+    "title": "Page not found",
+    "description": "The page you are trying to visit does not exist or has been moved.",
+    "backHome": "Back to home"
+  },
+  "auth": {
+    "login": "Log in",
+    "email": "Email address",
+    "password": "Password",
+    "logout": "Log out",
+    "register": "Sign up",
+    "invalidCredentials": "Invalid credentials or expired session."
+  },
+  "users": {
+    "title": "Users",
+    "create": "Create user",
+    "edit": "Edit user",
+    "delete": "Delete user"
+  },
+  "inventory": {
+    "title": "Inventory",
+    "supplies": "Supplies",
+    "create": "Create supply",
+    "search": "Search supplies",
+    "categories": "Categories",
+    "stock": "Stock"
+  },
+  "suppliers": {
+    "title": "Suppliers",
+    "create": "Create supplier",
+    "search": "Search suppliers"
+  },
+  "movements": {
+    "title": "Movements",
+    "create": "Register movement",
+    "entries": "Stock entries",
+    "exits": "Stock exits"
+  },
+  "clients": {
+    "title": "Clients"
+  },
+  "purchases": {
+    "title": "Purchases"
+  },
+  "roles": {
+    "title": "Roles"
+  },
+  "common": {
+    "language": "Language",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "search": "Search",
+    "edit": "Edit",
+    "delete": "Delete",
+    "close": "Close",
+    "home": "Home",
+    "toggleNavigation": "Toggle navigation"
+  },
+  "language": {
+    "spanish": "Spanish",
+    "english": "English"
+  },
+  "errors": {
+    "badRequest": "The request is invalid.",
+    "unauthorized": "You are not authorized or your session has expired.",
+    "notFound": "The requested resource was not found.",
+    "server": "A server error occurred."
+  },
+  "footer": {
+    "copyright": "© 2026 EMI - Inventory Management Environment",
+    "description": "Inventory management system"
+  }
+}

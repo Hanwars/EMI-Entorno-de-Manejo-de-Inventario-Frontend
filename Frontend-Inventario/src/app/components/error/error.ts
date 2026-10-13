@@ -1,9 +1,11 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-error',
-  imports: [RouterLink],
+  standalone: true,
+  imports: [RouterLink, TranslatePipe],
   templateUrl: './error.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './error.css',
