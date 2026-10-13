@@ -5,7 +5,7 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { routes } from './app.routes';
-import { IdiomaService } from './services/idioma.service';
+import { IdiomaService, IDIOMA_PREDETERMINADO } from './services/idioma.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,7 +13,8 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(),
     provideTranslateService({
-      fallbackLang: 'es',
+      lang: IDIOMA_PREDETERMINADO,
+      fallbackLang: IDIOMA_PREDETERMINADO,
       loader: provideTranslateHttpLoader({
         prefix: '/i18n/',
         suffix: '.json',
