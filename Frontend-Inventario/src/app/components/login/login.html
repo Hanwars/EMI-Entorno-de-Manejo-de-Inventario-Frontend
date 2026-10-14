@@ -1,0 +1,47 @@
+<div class="container py-5 mt-4">
+  <div class="row align-items-center">
+    <div class="col-md-6 mb-5 mb-md-0">
+      <h1 class="display-3 fw-bold">{{ 'app.title' | translate }}</h1>
+      <h2 class="mb-4">{{ 'app.fullTitle' | translate }}</h2>
+      <p class="lead">{{ 'login.decorativeText' | translate }}</p>
+      <p class="text-secondary">{{ 'app.systemDescription' | translate }}</p>
+    </div>
+
+    <div class="col-md-6 col-lg-5 offset-lg-1">
+      <div class="card login-card">
+        <div class="card-body p-4 p-lg-5">
+          <h3 class="fw-bold">{{ 'auth.login' | translate }}</h3>
+          <p class="text-secondary mb-4">{{ 'login.subtitle' | translate }}</p>
+
+          <div class="mb-3">
+            <label for="login-email" class="form-label">{{ 'auth.email' | translate }}</label>
+            <input
+              id="login-email"
+              class="form-control form-control-lg"
+              type="email"
+              autocomplete="email"
+              [placeholder]="'login.emailPlaceholder' | translate"
+            />
+          </div>
+
+          <div class="mb-4">
+            <label for="login-password" class="form-label">{{ 'auth.password' | translate }}</label>
+            <input
+              id="login-password"
+              class="form-control form-control-lg"
+              type="password"
+              autocomplete="current-password"
+              [placeholder]="'login.passwordPlaceholder' | translate"
+            />
+          </div>
+
+          <button type="button" class="btn btn-danger btn-lg w-100">{{ 'auth.login' | translate }}</button>
+
+          <div class="text-center mt-4">
+            <a [routerLink]="['/home']" class="link-secondary">{{ 'login.backHome' | translate }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
