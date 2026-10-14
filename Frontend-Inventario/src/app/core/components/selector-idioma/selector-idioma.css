@@ -1,5 +1,98 @@
-.selector-idioma button {
-  min-width: 44px;
+.selector-idioma {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Etiqueta "Idioma:" con el icono del globo, para que se entienda qué hace el control. */
+.selector-idioma__etiqueta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.95rem;
+  color: var(--bs-secondary-color);
+  white-space: nowrap;
+}
+
+.selector-idioma__icono {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+/* Cápsula que agrupa las dos opciones. */
+.selector-idioma__opciones {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.selector-idioma__opcion {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-width: 6rem;
   min-height: 38px;
+  padding: 0.3rem 0.9rem;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--bs-body-color);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.selector-idioma__opcion:hover:not(.selector-idioma__opcion--activa) {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.selector-idioma__opcion:focus-visible {
+  outline: 2px solid var(--bs-danger);
+  outline-offset: 2px;
+}
+
+/* Idioma activo: mismo rojo que los botones principales de la página, con marca de verificación. */
+.selector-idioma__opcion--activa {
+  background-color: var(--bs-danger);
+  color: #fff;
   font-weight: 600;
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.35);
+  cursor: default;
+}
+
+.selector-idioma__check {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* En pantallas táctiles (tabletas y teléfonos) los botones son más grandes para pulsarlos con el dedo. */
+@media (pointer: coarse) {
+  .selector-idioma__opcion {
+    min-width: 6.5rem;
+    min-height: 44px;
+    padding: 0.4rem 1rem;
+  }
+}
+
+/* Con la barra plegada (tabletas en vertical y teléfonos), el selector ocupa todo el ancho. */
+@media (max-width: 991.98px) {
+  .selector-idioma {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.4rem;
+    padding: 0.5rem 0;
+  }
+
+  .selector-idioma__opciones {
+    display: flex;
+  }
+
+  .selector-idioma__opcion {
+    flex: 1;
+  }
 }
