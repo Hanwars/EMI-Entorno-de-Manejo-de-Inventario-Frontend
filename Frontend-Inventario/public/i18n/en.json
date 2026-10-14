@@ -90,11 +90,30 @@
     "spanish": "Spanish",
     "english": "English"
   },
+  "validation": {
+    "_comentario": "Mensajes generales para cualquier formulario. Cada clave se llama igual que el error de los Validators de Angular (required, email, minlength...). {{min}} y {{max}} se reemplazan con el límite del campo.",
+    "required": "This field is required.",
+    "email": "Enter a valid email address.",
+    "minlength": "Must be at least {{min}} characters long.",
+    "maxlength": "Cannot be longer than {{max}} characters.",
+    "min": "The minimum allowed value is {{min}}.",
+    "max": "The maximum allowed value is {{max}}.",
+    "pattern": "The format is not valid.",
+    "_comentarioLogin": "Mensajes específicos del inicio de sesión. Las reglas de la contraseña (8 a 72 caracteres) son las definidas para bcrypt.",
+    "emailRequired": "Email is required.",
+    "passwordRequired": "Password is required.",
+    "passwordMinLength": "Password must be at least 8 characters long.",
+    "passwordMaxLength": "Password cannot exceed 72 characters."
+  },
   "errors": {
+    "_comentario": "Mensajes según la respuesta HTTP del backend. 'network' se usa cuando no hay respuesta del servidor y 'unknown' para cualquier otro error.",
     "badRequest": "The request is invalid.",
     "unauthorized": "You are not authorized or your session has expired.",
+    "forbidden": "You do not have permission to perform this action.",
     "notFound": "The requested resource was not found.",
-    "server": "A server error occurred."
+    "server": "A server error occurred.",
+    "network": "Could not connect to the server. Check your connection.",
+    "unknown": "An unexpected error occurred."
   },
   "footer": {
     "copyright": "© 2026 EMI - Inventory Management Environment",

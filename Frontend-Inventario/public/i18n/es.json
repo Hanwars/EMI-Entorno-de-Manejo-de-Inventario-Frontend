@@ -90,11 +90,30 @@
     "spanish": "Español",
     "english": "Inglés"
   },
+  "validation": {
+    "_comentario": "Mensajes generales para cualquier formulario. Cada clave se llama igual que el error de los Validators de Angular (required, email, minlength...). {{min}} y {{max}} se reemplazan con el límite del campo.",
+    "required": "Este campo es obligatorio.",
+    "email": "Ingresa un correo electrónico válido.",
+    "minlength": "Debe tener al menos {{min}} caracteres.",
+    "maxlength": "No puede tener más de {{max}} caracteres.",
+    "min": "El valor mínimo permitido es {{min}}.",
+    "max": "El valor máximo permitido es {{max}}.",
+    "pattern": "El formato no es válido.",
+    "_comentarioLogin": "Mensajes específicos del inicio de sesión. Las reglas de la contraseña (8 a 72 caracteres) son las definidas para bcrypt.",
+    "emailRequired": "El correo electrónico es obligatorio.",
+    "passwordRequired": "La contraseña es obligatoria.",
+    "passwordMinLength": "La contraseña debe tener al menos 8 caracteres.",
+    "passwordMaxLength": "La contraseña no puede superar los 72 caracteres."
+  },
   "errors": {
+    "_comentario": "Mensajes según la respuesta HTTP del backend. 'network' se usa cuando no hay respuesta del servidor y 'unknown' para cualquier otro error.",
     "badRequest": "La solicitud no es válida.",
     "unauthorized": "No tienes autorización o la sesión expiró.",
+    "forbidden": "No tienes permiso para realizar esta acción.",
     "notFound": "No se encontró el recurso solicitado.",
-    "server": "Ocurrió un error en el servidor."
+    "server": "Ocurrió un error en el servidor.",
+    "network": "No se pudo conectar con el servidor. Verifica tu conexión.",
+    "unknown": "Ocurrió un error inesperado."
   },
   "footer": {
     "copyright": "© 2026 EMI - Entorno de Manejo de Inventario",
