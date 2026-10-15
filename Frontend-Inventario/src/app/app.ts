@@ -19,6 +19,10 @@ export class App implements OnDestroy {
 
   public readonly currentUser = this.auth.currentUser;
 
+  get isLoginPage(): boolean {
+    return this.router.url.split('?')[0] === '/login';
+  }
+
   // Revisa cada 30 segundos si la sesión sigue siendo válida.
   private readonly checkSessionInterval = setInterval(() => this.checkSession(), 30_000);
 

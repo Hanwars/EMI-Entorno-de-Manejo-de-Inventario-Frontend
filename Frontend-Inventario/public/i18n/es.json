@@ -32,6 +32,14 @@
     "description": "La página que intentas visitar no existe o fue movida.",
     "backHome": "Volver al inicio"
   },
+  "login": {
+    "brandEyebrow": "Gestión inteligente de inventarios",
+    "formEyebrow": "Acceso seguro",
+    "subtitle": "Ingresa tus credenciales para continuar.",
+    "emailPlaceholder": "nombre@empresa.com",
+    "passwordPlaceholder": "Ingresa tu contraseña",
+    "backHome": "Volver al inicio"
+  },
   "auth": {
     "login": "Iniciar sesión",
     "email": "Correo electrónico",

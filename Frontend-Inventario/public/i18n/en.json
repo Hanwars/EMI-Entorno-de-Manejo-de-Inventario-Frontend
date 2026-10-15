@@ -32,6 +32,14 @@
     "description": "The page you are trying to visit does not exist or has been moved.",
     "backHome": "Back to home"
   },
+  "login": {
+    "brandEyebrow": "Smart inventory management",
+    "formEyebrow": "Secure access",
+    "subtitle": "Enter your credentials to continue.",
+    "emailPlaceholder": "name@company.com",
+    "passwordPlaceholder": "Enter your password",
+    "backHome": "Back to home"
+  },
   "auth": {
     "login": "Log in",
     "email": "Email address",

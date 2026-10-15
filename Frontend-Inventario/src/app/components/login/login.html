@@ -1,24 +1,61 @@
-<div class="container py-5 mt-4">
-  <div class="row align-items-center">
-    <div class="col-md-6 mb-5 mb-md-0">
-      <h1 class="display-3 fw-bold">{{ 'app.title' | translate }}</h1>
-      <h2 class="mb-4">{{ 'app.fullTitle' | translate }}</h2>
-      <p class="lead">{{ 'login.decorativeText' | translate }}</p>
-      <p class="text-secondary">{{ 'app.systemDescription' | translate }}</p>
-    </div>
+<section class="login-page" aria-labelledby="login-title">
+  <div class="login-layout row g-0">
+    <aside class="login-brand-panel col-lg-6 d-none d-lg-flex" aria-label="EMI">
+      <div class="brand-content">
+        <a class="brand-logo" [routerLink]="['/home']" [attr.aria-label]="'app.title' | translate">
+          <img src="/LogoEMI.png" [alt]="'home.logoAlt' | translate" />
+        </a>
 
-    <div class="col-md-6 col-lg-5 offset-lg-1">
-      <div class="card login-card">
-        <div class="card-body p-4 p-lg-5">
-          <h3 class="fw-bold">{{ 'auth.login' | translate }}</h3>
-          <p class="text-secondary mb-4">{{ 'login.subtitle' | translate }}</p>
+        <div class="brand-copy">
+          <span class="brand-eyebrow">{{ 'login.brandEyebrow' | translate }}</span>
+          <h1>{{ 'app.fullTitle' | translate }}</h1>
+          <p>{{ 'home.description' | translate }}</p>
+        </div>
 
-          <form (ngSubmit)="iniciarSesion()" #formulario="ngForm">
-            <div class="mb-3">
-              <label for="login-email" class="form-label">{{ 'auth.email' | translate }}</label>
+        <div class="inventory-visual" aria-hidden="true">
+          <span class="visual-orbit orbit-one"></span>
+          <span class="visual-orbit orbit-two"></span>
+          <div class="visual-card visual-card-main">
+            <span class="visual-card-mark"></span>
+            <span class="visual-line visual-line-long"></span>
+            <span class="visual-line visual-line-medium"></span>
+            <span class="visual-line visual-line-short"></span>
+            <div class="visual-bars"><span></span><span></span><span></span><span></span><span></span></div>
+          </div>
+          <div class="visual-card visual-card-small">
+            <span class="visual-dot"></span>
+            <span class="visual-line visual-line-medium"></span>
+            <span class="visual-line visual-line-short"></span>
+          </div>
+        </div>
+
+        <div class="brand-footer">
+          <span class="brand-footer-dot"></span>
+          {{ 'app.systemDescription' | translate }}
+        </div>
+      </div>
+    </aside>
+
+    <div class="login-form-panel col-12 col-lg-6">
+      <div class="mobile-brand d-lg-none">
+        <img src="/LogoEMI.png" [alt]="'home.logoAlt' | translate" />
+      </div>
+
+      <div class="login-card">
+        <header class="login-heading">
+          <span class="login-eyebrow">{{ 'login.formEyebrow' | translate }}</span>
+          <h2 id="login-title">{{ 'auth.login' | translate }}</h2>
+          <p>{{ 'login.subtitle' | translate }}</p>
+        </header>
+
+        <form class="login-fields" (ngSubmit)="iniciarSesion()" #formulario="ngForm">
+          <div class="mb-4">
+            <label for="login-email" class="form-label">{{ 'auth.email' | translate }}</label>
+            <div class="login-input-wrap">
+              <span class="input-symbol email-symbol" aria-hidden="true">@</span>
               <input
                 id="login-email"
-                class="form-control form-control-lg"
+                class="form-control login-input"
                 type="email"
                 autocomplete="email"
                 [placeholder]="'login.emailPlaceholder' | translate"
@@ -29,12 +66,17 @@
                 [disabled]="enviando"
               />
             </div>
+          </div>
 
-            <div class="mb-4">
-              <label for="login-password" class="form-label">{{ 'auth.password' | translate }}</label>
+          <div class="mb-4">
+            <label for="login-password" class="form-label">{{ 'auth.password' | translate }}</label>
+            <div class="login-input-wrap">
+              <span class="input-symbol password-symbol" aria-hidden="true">
+                <i class="fa-solid fa-lock"></i>
+              </span>
               <input
                 id="login-password"
-                class="form-control form-control-lg"
+                class="form-control login-input"
                 type="password"
                 autocomplete="current-password"
                 [placeholder]="'login.passwordPlaceholder' | translate"
@@ -44,21 +86,33 @@
                 [disabled]="enviando"
               />
             </div>
-
-            <button
-              type="submit"
-              class="btn btn-danger btn-lg w-100"
-              [disabled]="enviando || !formulario.valid"
-            >
-              {{ (enviando ? 'auth.loggingIn' : 'auth.login') | translate }}
-            </button>
-          </form>
-
-          <div class="text-center mt-4">
-            <a [routerLink]="['/home']" class="link-secondary">{{ 'login.backHome' | translate }}</a>
           </div>
+
+          <button
+            type="submit"
+            class="btn btn-danger login-submit w-100"
+            [disabled]="enviando || !formulario.valid"
+          >
+            @if (enviando) {
+              <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+              <span>{{ 'auth.loggingIn' | translate }}</span>
+            } @else {
+              <span>{{ 'auth.login' | translate }}</span>
+              <span class="submit-arrow" aria-hidden="true">→</span>
+            }
+          </button>
+        </form>
+
+        <div class="login-bottom">
+          <span class="login-bottom-rule"></span>
+          <a [routerLink]="['/home']" class="back-home-link">
+            <span aria-hidden="true">←</span>
+            {{ 'login.backHome' | translate }}
+          </a>
         </div>
+
+        <p class="login-copyright">{{ 'footer.copyright' | translate }}</p>
       </div>
     </div>
   </div>
-</div>
+</section>
