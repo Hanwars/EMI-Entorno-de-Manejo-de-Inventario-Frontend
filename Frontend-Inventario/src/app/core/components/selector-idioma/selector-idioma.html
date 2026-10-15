@@ -1,22 +1,44 @@
-<div class="selector-idioma d-flex align-items-center gap-1" role="group" [attr.aria-label]="'common.language' | translate">
-  <button
-    type="button"
-    class="btn btn-sm"
-    [class.btn-danger]="idiomaService.idiomaActual() === 'es'"
-    [class.btn-outline-secondary]="idiomaService.idiomaActual() !== 'es'"
-    [attr.aria-pressed]="idiomaService.idiomaActual() === 'es'"
-    [attr.aria-label]="'language.spanish' | translate"
-    (click)="cambiarIdioma('es')">
-    ES
-  </button>
-  <button
-    type="button"
-    class="btn btn-sm"
-    [class.btn-danger]="idiomaService.idiomaActual() === 'en'"
-    [class.btn-outline-secondary]="idiomaService.idiomaActual() !== 'en'"
-    [attr.aria-pressed]="idiomaService.idiomaActual() === 'en'"
-    [attr.aria-label]="'language.english' | translate"
-    (click)="cambiarIdioma('en')">
-    EN
-  </button>
+<div class="selector-idioma" role="group" [attr.aria-label]="'common.language' | translate">
+  <span class="selector-idioma__etiqueta" aria-hidden="true">
+    <svg class="selector-idioma__icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18" />
+      <path d="M12 3a14 14 0 0 1 0 18" />
+      <path d="M12 3a14 14 0 0 0 0 18" />
+    </svg>
+    {{ 'common.language' | translate }}:
+  </span>
+
+  <div class="selector-idioma__opciones">
+    <!-- Cada idioma se muestra con su nombre en su propio idioma para que cualquier persona lo reconozca. -->
+    <button
+      type="button"
+      lang="es"
+      class="selector-idioma__opcion"
+      [class.selector-idioma__opcion--activa]="idiomaService.idiomaActual() === 'es'"
+      [attr.aria-pressed]="idiomaService.idiomaActual() === 'es'"
+      (click)="cambiarIdioma('es')">
+      @if (idiomaService.idiomaActual() === 'es') {
+        <svg class="selector-idioma__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12.5l4.5 4.5L19 7.5" />
+        </svg>
+      }
+      Español
+    </button>
+
+    <button
+      type="button"
+      lang="en"
+      class="selector-idioma__opcion"
+      [class.selector-idioma__opcion--activa]="idiomaService.idiomaActual() === 'en'"
+      [attr.aria-pressed]="idiomaService.idiomaActual() === 'en'"
+      (click)="cambiarIdioma('en')">
+      @if (idiomaService.idiomaActual() === 'en') {
+        <svg class="selector-idioma__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12.5l4.5 4.5L19 7.5" />
+        </svg>
+      }
+      English
+    </button>
+  </div>
 </div>
