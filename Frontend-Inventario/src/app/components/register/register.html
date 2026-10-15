@@ -1,0 +1,103 @@
+<!-- Toast -->
+@if (toast.show) {
+  <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
+    <div class="toast show text-white" [ngClass]="toast.typeClass">
+      <div class="d-flex">
+        <div class="toast-body">
+          {{ toast.message | translate }}
+        </div>
+
+        <button
+          type="button"
+          class="btn-close btn-close-white me-2 m-auto"
+          [attr.aria-label]="'common.close' | translate"
+          (click)="toast.show = false"
+        ></button>
+      </div>
+    </div>
+  </div>
+}
+
+<div class="col-md-12 mt-4">
+  <h3 class="text-center">{{ 'register.title' | translate }}</h3>
+
+  <form
+    class="col-md-8 mx-auto"
+    #registerForm="ngForm"
+    (ngSubmit)="saveUser(registerForm)"
+  >
+    <!-- Nombre -->
+    <div class="form-group">
+      <label for="nombre">{{ 'register.name' | translate }}</label>
+
+      <input
+        type="text"
+        class="form-control"
+        id="nombre"
+        name="nombre"
+        #nombre="ngModel"
+        [(ngModel)]="user.nombre"
+        pattern="^(?=.*[a-z])(?=.*[A-Z]).{3,}$"
+        required
+      />
+
+      @if (!nombre.valid && nombre.touched) {
+        <small class="invalid-feedback d-block">
+          {{ 'register.nameInvalid' | translate }}
+        </small>
+      }
+    </div>
+
+    <!-- Correo electrónico -->
+    <div class="form-group mt-3">
+      <label for="email">{{ 'register.email' | translate }}</label>
+
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        name="email"
+        #email="ngModel"
+        [(ngModel)]="user.email"
+        pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+        required
+      />
+
+      @if (!email.valid && email.touched) {
+        <small class="invalid-feedback d-block">
+          {{ 'auth.emailInvalid' | translate }}
+        </small>
+      }
+    </div>
+
+    <!-- Contraseña -->
+    <div class="form-group mt-3 mb-3">
+      <label for="contrasena">{{ 'register.password' | translate }}</label>
+
+      <input
+        type="password"
+        class="form-control"
+        id="contrasena"
+        name="contrasena"
+        #contrasena="ngModel"
+        [(ngModel)]="user.contrasena"
+        pattern="^(?=.*[a-z])(?=.*[A-Z]).{6,}$"
+        required
+      />
+
+      @if (!contrasena.valid && contrasena.touched) {
+        <small class="invalid-feedback d-block">
+          {{ 'register.passwordInvalid' | translate }}
+        </small>
+      }
+    </div>
+
+    <!-- Botón -->
+    <input
+      type="submit"
+      [value]="'register.submit' | translate"
+      [disabled]="registerForm.invalid"
+      class="btn btn-primary mt-2"
+    />
+  </form>
+</div>

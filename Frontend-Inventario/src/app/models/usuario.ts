@@ -11,3 +11,11 @@ export class Usuario {
     ){}
 
 }
+
+export class UserPaylod{
+    constructor(
+        public id:number,
+        public name:string,
+        public role:number | null,
+    ){}
+}

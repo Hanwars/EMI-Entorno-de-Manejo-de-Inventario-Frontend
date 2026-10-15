@@ -1,0 +1,78 @@
+<div class="col-md-12 mt-4">
+  @if (status === 0) {
+    <div class="alert alert-danger mt-3" role="alert">
+      {{ 'auth.loginError' | translate }}
+    </div>
+  } @else if (status === 1) {
+    <div class="alert alert-warning mt-3" role="alert">
+      {{ 'auth.loginServerError' | translate }}
+    </div>
+  }
+
+  <div class="col-md-4 mx-auto">
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+      <h3 class="text-center">{{ 'auth.loginTitle' | translate }}</h3>
+
+      <!-- Correo electrónico -->
+      <div class="form-group">
+        <label for="email">{{ 'auth.email' | translate }}</label>
+
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          name="email"
+          #email="ngModel"
+          [(ngModel)]="user.email"
+          required
+          email
+        />
+
+        @if (!email.valid && email.touched) {
+          <small class="invalid-feedback d-block">
+            {{ 'auth.emailInvalid' | translate }}
+          </small>
+        }
+      </div>
+
+      <!-- Contraseña -->
+      <div class="form-group">
+        <label for="contrasena">{{ 'auth.password' | translate }}</label>
+
+        <input
+          type="password"
+          class="form-control"
+          id="contrasena"
+          name="contrasena"
+          #contrasena="ngModel"
+          [(ngModel)]="user.contrasena"
+          required
+        />
+
+        @if (!contrasena.valid && contrasena.touched) {
+          <small class="invalid-feedback d-block">
+            {{ 'auth.passwordRequired' | translate }}
+          </small>
+        }
+      </div>
+
+      <!-- Botones -->
+      <div class="d-flex justify-content-between mt-3">
+        <input
+          class="btn btn-primary"
+          type="submit"
+          [value]="'auth.login' | translate"
+          [disabled]="loginForm.invalid"
+        />
+
+        <button
+          [routerLink]="['/home']"
+          type="button"
+          class="btn btn-secondary"
+        >
+          {{ 'common.cancel' | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

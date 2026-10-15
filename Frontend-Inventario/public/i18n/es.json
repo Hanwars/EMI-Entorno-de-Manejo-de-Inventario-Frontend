@@ -38,7 +38,26 @@
     "password": "Contraseña",
     "logout": "Cerrar sesión",
     "register": "Registrarse",
-    "invalidCredentials": "Credenciales inválidas o sesión expirada."
+    "invalidCredentials": "Credenciales inválidas o sesión expirada.",
+    "loginTitle": "Inicio de sesión",
+    "loginError": "Usuario y/o contraseña incorrectos.",
+    "loginServerError": "Error inesperado del servidor. Inténtelo más tarde.",
+    "emailRequired": "El correo electrónico es obligatorio.",
+    "emailInvalid": "Ingrese un correo electrónico válido.",
+    "passwordRequired": "La contraseña es obligatoria."
+  },
+  "register": {
+    "title": "Registro de usuario",
+    "name": "Nombre",
+    "nameInvalid": "El nombre debe tener al menos 3 caracteres e incluir una mayúscula y una minúscula.",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "passwordInvalid": "La contraseña necesita al menos una mayúscula, una minúscula y 6 caracteres.",
+    "submit": "Registrarse",
+    "success": "¡Registro completado! El usuario se guardó correctamente.",
+    "error": "Error al registrarse",
+    "duplicate": "El correo ya está registrado",
+    "invalidForm": "No se puede registrar: revisa los campos obligatorios."
   },
   "users": {
     "title": "Usuarios",

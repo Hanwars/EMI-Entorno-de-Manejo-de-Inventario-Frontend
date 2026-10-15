@@ -38,7 +38,26 @@
     "password": "Password",
     "logout": "Log out",
     "register": "Sign up",
-    "invalidCredentials": "Invalid credentials or expired session."
+    "invalidCredentials": "Invalid credentials or expired session.",
+    "loginTitle": "Log in",
+    "loginError": "Incorrect email or password.",
+    "loginServerError": "Unexpected server error. Please try again later.",
+    "emailRequired": "Email address is required.",
+    "emailInvalid": "Enter a valid email address.",
+    "passwordRequired": "Password is required."
+  },
+  "register": {
+    "title": "User registration",
+    "name": "Name",
+    "nameInvalid": "The name must contain at least 3 characters, including an uppercase and a lowercase letter.",
+    "email": "Email address",
+    "password": "Password",
+    "passwordInvalid": "The password must contain at least one uppercase letter, one lowercase letter, and 6 characters.",
+    "submit": "Sign up",
+    "success": "Registration completed! The user was saved successfully.",
+    "error": "Registration failed",
+    "duplicate": "This email address is already registered.",
+    "invalidForm": "Cannot register: check the required fields."
   },
   "users": {
     "title": "Users",

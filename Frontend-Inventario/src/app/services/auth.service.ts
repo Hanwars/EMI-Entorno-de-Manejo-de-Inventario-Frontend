@@ -1,47 +1,53 @@
 import { Injectable, signal } from '@angular/core';
+import { Usuario, UserPaylod } from '../models/usuario';
+import { Observable, tap } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment as environment } from '../../environments/environment';
 
-
-export interface SessionUser {
-  id: number;
-  name: string;
-  email: string;
-  role: number; // 1 = Administrador
+export interface LoginResponse {
+  access_token: string;
+  payload: UserPaylod;
 }
 
-const TOKEN_KEY = 'emi_token';
-const USER_KEY = 'emi_user';
-
-
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root',
+})
 export class AuthService {
-  public readonly currentUser = signal<SessionUser | null>(this.loadUser());
+  private readonly url: string;
 
-  isAuthenticated(): boolean {
-    return !!localStorage.getItem(TOKEN_KEY) && this.currentUser() !== null;
+  currentUser = signal<UserPaylod | null>(
+    JSON.parse(sessionStorage.getItem('identity') || 'null'),
+  );
+
+  constructor(private _http: HttpClient) {
+    this.url = environment.apiUrl;
   }
 
-  getCurrentUser(): SessionUser | null {
-    return this.currentUser();
-  }
+  login(credentials: Usuario): Observable<LoginResponse> {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-  setSession(token: string, user: SessionUser): void {
-    localStorage.setItem(TOKEN_KEY, token);
-    localStorage.setItem(USER_KEY, JSON.stringify(user));
-    this.currentUser.set(user);
+    return this._http
+      .post<LoginResponse>(this.url + 'login', credentials, { headers })
+      .pipe(
+        tap((response) => {
+          this.currentUser.set(response.payload);
+          sessionStorage.setItem('token', response.access_token);
+          sessionStorage.setItem('identity', JSON.stringify(response.payload));
+        }),
+      );
   }
 
   logout(): void {
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
     this.currentUser.set(null);
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('identity');
   }
 
-  private loadUser(): SessionUser | null {
-    try {
-      const raw = localStorage.getItem(USER_KEY);
-      return raw ? (JSON.parse(raw) as SessionUser) : null;
-    } catch {
-      return null;
-    }
+  isAuthenticated(): boolean {
+    return !!sessionStorage.getItem('token');
+  }
+
+  getCurrentUser(): UserPaylod | null {
+    return this.currentUser();
   }
 }
