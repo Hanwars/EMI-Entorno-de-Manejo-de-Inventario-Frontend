@@ -13,29 +13,46 @@
           <h3 class="fw-bold">{{ 'auth.login' | translate }}</h3>
           <p class="text-secondary mb-4">{{ 'login.subtitle' | translate }}</p>
 
-          <div class="mb-3">
-            <label for="login-email" class="form-label">{{ 'auth.email' | translate }}</label>
-            <input
-              id="login-email"
-              class="form-control form-control-lg"
-              type="email"
-              autocomplete="email"
-              [placeholder]="'login.emailPlaceholder' | translate"
-            />
-          </div>
+          <form (ngSubmit)="iniciarSesion()" #formulario="ngForm">
+            <div class="mb-3">
+              <label for="login-email" class="form-label">{{ 'auth.email' | translate }}</label>
+              <input
+                id="login-email"
+                class="form-control form-control-lg"
+                type="email"
+                autocomplete="email"
+                [placeholder]="'login.emailPlaceholder' | translate"
+                name="email"
+                [(ngModel)]="email"
+                required
+                email
+                [disabled]="enviando"
+              />
+            </div>
 
-          <div class="mb-4">
-            <label for="login-password" class="form-label">{{ 'auth.password' | translate }}</label>
-            <input
-              id="login-password"
-              class="form-control form-control-lg"
-              type="password"
-              autocomplete="current-password"
-              [placeholder]="'login.passwordPlaceholder' | translate"
-            />
-          </div>
+            <div class="mb-4">
+              <label for="login-password" class="form-label">{{ 'auth.password' | translate }}</label>
+              <input
+                id="login-password"
+                class="form-control form-control-lg"
+                type="password"
+                autocomplete="current-password"
+                [placeholder]="'login.passwordPlaceholder' | translate"
+                name="contrasena"
+                [(ngModel)]="contrasena"
+                required
+                [disabled]="enviando"
+              />
+            </div>
 
-          <button type="button" class="btn btn-danger btn-lg w-100">{{ 'auth.login' | translate }}</button>
+            <button
+              type="submit"
+              class="btn btn-danger btn-lg w-100"
+              [disabled]="enviando || !formulario.valid"
+            >
+              {{ (enviando ? 'auth.loggingIn' : 'auth.login') | translate }}
+            </button>
+          </form>
 
           <div class="text-center mt-4">
             <a [routerLink]="['/home']" class="link-secondary">{{ 'login.backHome' | translate }}</a>

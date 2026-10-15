@@ -38,7 +38,11 @@
     "password": "Password",
     "logout": "Log out",
     "register": "Sign up",
-    "invalidCredentials": "Invalid credentials or expired session."
+    "invalidCredentials": "The email address or password is incorrect.",
+    "accessDenied": "This account is not allowed to sign in.",
+    "validationRequired": "Enter your email address and password.",
+    "validationEmail": "Enter a valid email address.",
+    "loginResponseInvalid": "The server returned an invalid login response."
   },
   "users": {
     "title": "Users",

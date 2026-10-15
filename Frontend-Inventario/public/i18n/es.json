@@ -38,7 +38,11 @@
     "password": "Contraseña",
     "logout": "Cerrar sesión",
     "register": "Registrarse",
-    "invalidCredentials": "Credenciales inválidas o sesión expirada."
+    "invalidCredentials": "El correo o la contraseña no son correctos.",
+    "accessDenied": "La cuenta no está habilitada para iniciar sesión.",
+    "validationRequired": "Ingresa el correo y la contraseña.",
+    "validationEmail": "Ingresa un correo electrónico válido.",
+    "loginResponseInvalid": "El servidor devolvió una respuesta de inicio de sesión inválida."
   },
   "users": {
     "title": "Usuarios",
