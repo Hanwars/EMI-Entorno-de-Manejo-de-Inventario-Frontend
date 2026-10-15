@@ -3,6 +3,7 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from './services/auth.service';
 import { SelectorIdioma } from './core/components/selector-idioma/selector-idioma';
+import { MensajeService } from './services/mensaje.service';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,7 @@ import { SelectorIdioma } from './core/components/selector-idioma/selector-idiom
 export class App implements OnDestroy {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly mensajes = inject(MensajeService);
 
   public readonly currentUser = this.auth.currentUser;
 
@@ -27,6 +29,10 @@ export class App implements OnDestroy {
   }
 
   logout(): void {
+    if (!this.mensajes.confirmar('messages.confirmLogout')) {
+      return;
+    }
+
     this.auth.logout();
     this.router.navigate(['/login']);
   }

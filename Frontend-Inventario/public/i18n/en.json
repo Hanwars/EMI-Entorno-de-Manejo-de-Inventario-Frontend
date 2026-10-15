@@ -111,9 +111,24 @@
     "unauthorized": "You are not authorized or your session has expired.",
     "forbidden": "You do not have permission to perform this action.",
     "notFound": "The requested resource was not found.",
+    "conflict": "The operation conflicts with existing data.",
+    "validation": "The entered data is invalid.",
     "server": "A server error occurred.",
     "network": "Could not connect to the server. Check your connection.",
     "unknown": "An unexpected error occurred."
+  },
+  "messages": {
+    "errorTitle": "Error",
+    "warningTitle": "Warning",
+    "confirmationTitle": "Confirmation",
+    "confirmLogout": "Are you sure you want to log out?",
+    "confirmDelete": "Are you sure you want to delete this record? This action cannot be undone.",
+    "changesDiscarded": "Do you want to discard the changes made?",
+    "unsavedChanges": "There are unsaved changes.",
+    "requiredFields": "Complete all required fields.",
+    "operationSuccess": "The operation was completed successfully.",
+    "operationFailed": "The operation could not be completed.",
+    "networkError": "Could not connect to the server. Check your connection and try again."
   },
   "footer": {
     "copyright": "© 2026 EMI - Inventory Management Environment",

@@ -111,9 +111,24 @@
     "unauthorized": "No tienes autorización o la sesión expiró.",
     "forbidden": "No tienes permiso para realizar esta acción.",
     "notFound": "No se encontró el recurso solicitado.",
+    "conflict": "La operación entra en conflicto con datos existentes.",
+    "validation": "Los datos ingresados no son válidos.",
     "server": "Ocurrió un error en el servidor.",
     "network": "No se pudo conectar con el servidor. Verifica tu conexión.",
     "unknown": "Ocurrió un error inesperado."
+  },
+   "messages": {
+    "errorTitle": "Error",
+    "warningTitle": "Advertencia",
+    "confirmationTitle": "Confirmación",
+    "confirmLogout": "¿Está seguro de que desea cerrar sesión?",
+    "confirmDelete": "¿Está seguro de que desea eliminar este registro? Esta acción no se puede deshacer.",
+    "changesDiscarded": "¿Desea descartar los cambios realizados?",
+    "unsavedChanges": "Hay cambios sin guardar.",
+    "requiredFields": "Completa los campos obligatorios.",
+    "operationSuccess": "La operación se completó correctamente.",
+    "operationFailed": "No se pudo completar la operación.",
+    "networkError": "No se pudo conectar con el servidor. Verifica tu conexión e inténtalo de nuevo."
   },
   "footer": {
     "copyright": "© 2026 EMI - Entorno de Manejo de Inventario",
