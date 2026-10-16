@@ -84,7 +84,8 @@
     "subtitle": "Completa tus datos para comenzar a gestionar tu inventario.",
     "namePlaceholder": "Tu nombre completo",
     "haveAccount": "¿Ya tienes una cuenta?",
-    "loginLink": "Inicia sesión"
+    "loginLink": "Inicia sesión",
+    "passwordTooLong": "La contraseña es demasiado larga. Por favor, utiliza una contraseña más corta."
   },
   "users": {
     "title": "Usuarios",

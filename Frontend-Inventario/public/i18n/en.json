@@ -84,7 +84,8 @@
     "subtitle": "Fill in your details to start managing your inventory.",
     "namePlaceholder": "Your full name",
     "haveAccount": "Already have an account?",
-    "loginLink": "Log in"
+    "loginLink": "Log in",
+    "passwordTooLong": "Your password is too long. Please use a shorter password."
   },
   "users": {
     "title": "Users",
