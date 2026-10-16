@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 import { Usuario } from '../../models/usuario';
@@ -23,6 +23,7 @@ interface ErrorLogin {
 export class Login {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly mensajes = inject(MensajeService);
 
   public user = new Usuario(0, 0, '', '', '');
@@ -52,7 +53,8 @@ export class Login {
       .subscribe({
         next: (response: LoginResponse) => {
           if (response?.access_token?.length > 0) {
-            this.router.navigate(['']);
+            // replaceUrl evita que el botón "Atrás" regrese al formulario de inicio de sesión.
+            this.router.navigateByUrl(this.obtenerDestino(), { replaceUrl: true });
           } else {
             // El servidor respondió, pero sin token: no se puede iniciar sesión.
             this.error.set({ clave: 'errors.unknown', tipo: 'warning' });
@@ -94,5 +96,11 @@ export class Login {
     }
 
     return { clave: this.mensajes.claveErrorHttp(err), tipo: 'warning' };
+  }
+
+  /** Página a la que se va tras iniciar sesión. Solo se aceptan rutas internas de la aplicación. */
+  private obtenerDestino(): string {
+    const destino = this.route.snapshot.queryParamMap.get('returnUrl');
+    return destino && destino.startsWith('/') && !destino.startsWith('//') ? destino : '/home';
   }
 }

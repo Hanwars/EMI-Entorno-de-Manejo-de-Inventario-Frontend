@@ -6,10 +6,11 @@ import { Register } from './components/register/register';
 
 import { routeGuard } from './core/guards/routes.guard';
 import { adminGuard } from './core/guards/admin.guard';
+import { guestGuard } from './core/guards/guest.guard';
 export const routes: Routes = [
     {path:'',component:Home},
     {path:'home',component:Home},
-    {path:'login',component:Login},
+    {path:'login',component:Login, canActivate:[guestGuard]},
     {path:'register',component:Register},
 
     {path:'**',component:Error},
