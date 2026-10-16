@@ -1,70 +1,77 @@
-<div class="container-fluid p-0 d-flex flex-column min-vh-100" [class.login-app-shell]="isLoginPage">
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
-      <div class="container-fluid">
-        <a class="navbar-brand" [routerLink]="['/home']">{{ 'app.title' | translate }}</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNavDropdown"
-          aria-controls="navbarNavDropdown"
-          aria-expanded="false"
-          [attr.aria-label]="'common.toggleNavigation' | translate"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a [routerLink]="['/home']" class="nav-link active fw-bold" aria-current="page">{{ 'app.home' | translate }}</a>
-            </li>
+<div class="app-shell">
+  <nav class="topbar navbar navbar-expand-lg" data-bs-theme="dark" [attr.aria-label]="'common.mainNavigation' | translate">
+    <div class="topbar__inner">
+      <div class="brand-nav">
+        <a class="brand" [routerLink]="['/home']">{{ 'app.title' | translate }}</a>
+        <span class="nav-divider" aria-hidden="true"></span>
+        <a class="home-link" [routerLink]="['/home']" routerLinkActive="active" ariaCurrentWhenActive="page">
+          {{ 'app.home' | translate }}
+        </a>
+      </div>
+
+      <button
+        class="navbar-toggler topbar__toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#menuPrincipal"
+        aria-controls="menuPrincipal"
+        aria-expanded="false"
+        [attr.aria-label]="'common.toggleNavigation' | translate"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse topbar__menu" id="menuPrincipal">
+        @if (currentUser()) {
+          <ul class="nav-links">
+            <li><a [routerLink]="['/supplies']" routerLinkActive="active">{{ 'navigation.supplies' | translate }}</a></li>
+            <li><a [routerLink]="['/categories']" routerLinkActive="active">{{ 'navigation.categories' | translate }}</a></li>
+            <li><a [routerLink]="['/suppliers']" routerLinkActive="active">{{ 'navigation.suppliers' | translate }}</a></li>
+            <li><a [routerLink]="['/clients']" routerLinkActive="active">{{ 'navigation.clients' | translate }}</a></li>
+            <li><a [routerLink]="['/purchases']" routerLinkActive="active">{{ 'navigation.purchases' | translate }}</a></li>
           </ul>
+        }
+
+        <div class="header-actions">
+          <app-selector-idioma />
+
           @if (currentUser()) {
-            <ul class="navbar-nav">
-              <li class="nav-item"><a [routerLink]="['/supplies']" class="nav-link">{{ 'navigation.supplies' | translate }}</a></li>
-              <li class="nav-item"><a [routerLink]="['/categories']" class="nav-link">{{ 'navigation.categories' | translate }}</a></li>
-              <li class="nav-item"><a [routerLink]="['/suppliers']" class="nav-link">{{ 'navigation.suppliers' | translate }}</a></li>
-              <li class="nav-item"><a [routerLink]="['/clients']" class="nav-link">{{ 'navigation.clients' | translate }}</a></li>
-              <li class="nav-item"><a [routerLink]="['/purchases']" class="nav-link">{{ 'navigation.purchases' | translate }}</a></li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  {{ currentUser()?.name }}
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a [routerLink]="['/user-profile']" class="dropdown-item">{{ 'navigation.profile' | translate }}</a></li>
-                  @if (currentUser()?.role === 1) {
-                    <li><a [routerLink]="['/role']" class="dropdown-item">{{ 'navigation.roles' | translate }}</a></li>
-                    <li><a [routerLink]="['/users']" class="dropdown-item">{{ 'navigation.users' | translate }}</a></li>
-                  }
-                </ul>
-              </li>
-            </ul>
-            <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
-              <li class="nav-item"><app-selector-idioma /></li>
-              <li class="nav-item">
-                <a class="nav-link text-danger fw-bold" style="cursor: pointer" (click)="logout()">{{ 'navigation.logout' | translate }}</a>
-              </li>
-            </ul>
+            <div class="dropdown">
+              <button class="session-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ currentUser()?.name }}
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end" data-bs-theme="dark">
+                <li><a class="dropdown-item" [routerLink]="['/user-profile']">{{ 'navigation.profile' | translate }}</a></li>
+                @if (currentUser()?.role === 1) {
+                  <li><a class="dropdown-item" [routerLink]="['/role']">{{ 'navigation.roles' | translate }}</a></li>
+                  <li><a class="dropdown-item" [routerLink]="['/users']">{{ 'navigation.users' | translate }}</a></li>
+                }
+              </ul>
+            </div>
+            <button class="session-link logout-link" type="button" (click)="logout()">
+              {{ 'navigation.logout' | translate }}
+            </button>
           } @else {
-            <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
-              <li class="nav-item"><app-selector-idioma /></li>
-              <li class="nav-item"><a [routerLink]="['/login']" class="nav-link">{{ 'navigation.login' | translate }}</a></li>
-              <li class="nav-item"><a [routerLink]="['/register']" class="nav-link">{{ 'navigation.register' | translate }}</a></li>
-            </ul>
+            <a class="session-link" [routerLink]="['/login']" routerLinkActive="active">
+              {{ 'navigation.login' | translate }}
+            </a>
+            <a class="session-link register-link" [routerLink]="['/register']" routerLinkActive="active">
+              {{ 'navigation.register' | translate }}
+            </a>
           }
         </div>
       </div>
+    </div>
   </nav>
-  <main data-bs-theme="dark" class="flex-grow-1" [class.login-shell]="isLoginPage">
+
+  <main class="app-main">
     <router-outlet></router-outlet>
   </main>
 
-  <footer class="bg-body-tertiary text-light py-3" data-bs-theme="dark">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6"><p class="mb-0">{{ 'footer.copyright' | translate }}</p></div>
-        <div class="col-md-6 text-md-end"><p class="mb-0">{{ 'footer.description' | translate }}</p></div>
-      </div>
+  <footer class="footer">
+    <div class="footer__inner">
+      <p><strong>{{ 'app.title' | translate }}</strong> · {{ 'app.fullTitle' | translate }}</p>
+      <p class="footer__description">{{ 'footer.description' | translate }}</p>
     </div>
   </footer>
 </div>

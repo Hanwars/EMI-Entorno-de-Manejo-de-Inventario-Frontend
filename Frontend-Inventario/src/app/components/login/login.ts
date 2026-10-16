@@ -16,6 +16,9 @@ export class Login {
   public status: number;
   public user: Usuario;
 
+ 
+  public mostrarContrasena = false;
+
   constructor(
     private _authService: AuthService,
     private _router: Router,

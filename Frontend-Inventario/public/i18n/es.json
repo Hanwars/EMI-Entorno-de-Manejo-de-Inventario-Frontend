@@ -25,7 +25,11 @@
     "details": "Lleva el control de tus existencias de manera eficiente, consulta reportes y administra toda la información de tu negocio de forma rápida y segura.",
     "start": "Comenzar",
     "learnMore": "Conocer más",
-    "logoAlt": "Logo de EMI"
+    "logoAlt": "Logo de EMI",
+    "titleLine1": "Entorno de Manejo de",
+    "titleLine2": "Inventario",
+    "lead": "Una plataforma simple y segura para administrar la información de tu negocio.",
+    "createAccount": "Crear cuenta"
   },
   "error": {
     "title": "Página no encontrada",
@@ -52,11 +56,20 @@
     "loginServerError": "Error inesperado del servidor. Inténtelo más tarde.",
     "emailRequired": "El correo electrónico es obligatorio.",
     "emailInvalid": "Ingrese un correo electrónico válido.",
-    "passwordRequired": "La contraseña es obligatoria."
+    "passwordRequired": "La contraseña es obligatoria.",
+    "welcome": "Bienvenido a EMI",
+    "loginSubtitle": "Ingresa tus datos para acceder al sistema de inventario.",
+    "emailPlaceholder": "correo@empresa.com",
+    "passwordPlaceholder": "Ingresa tu contraseña",
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Ocultar contraseña",
+    "submit": "Ingresar",
+    "noAccount": "¿Aún no tienes una cuenta?",
+    "registerLink": "Regístrate"
   },
   "register": {
-    "title": "Registro de usuario",
-    "name": "Nombre",
+    "title": "Crear una cuenta",
+    "name": "Nombre completo",
     "nameInvalid": "El nombre debe tener al menos 3 caracteres e incluir una mayúscula y una minúscula.",
     "email": "Correo electrónico",
     "password": "Contraseña",
@@ -65,7 +78,12 @@
     "success": "¡Registro completado! El usuario se guardó correctamente.",
     "error": "Error al registrarse",
     "duplicate": "El correo ya está registrado",
-    "invalidForm": "No se puede registrar: revisa los campos obligatorios."
+    "invalidForm": "No se puede registrar: revisa los campos obligatorios.",
+    "eyebrow": "Únete a EMI",
+    "subtitle": "Completa tus datos para comenzar a gestionar tu inventario.",
+    "namePlaceholder": "Tu nombre completo",
+    "haveAccount": "¿Ya tienes una cuenta?",
+    "loginLink": "Inicia sesión"
   },
   "users": {
     "title": "Usuarios",
@@ -111,7 +129,8 @@
     "delete": "Eliminar",
     "close": "Cerrar",
     "home": "Inicio",
-    "toggleNavigation": "Abrir o cerrar navegación"
+    "toggleNavigation": "Abrir o cerrar navegación",
+    "mainNavigation": "Navegación principal"
   },
   "language": {
     "spanish": "Español",
@@ -144,7 +163,7 @@
     "network": "No se pudo conectar con el servidor. Verifica tu conexión.",
     "unknown": "Ocurrió un error inesperado."
   },
-   "messages": {
+  "messages": {
     "errorTitle": "Error",
     "warningTitle": "Advertencia",
     "confirmationTitle": "Confirmación",

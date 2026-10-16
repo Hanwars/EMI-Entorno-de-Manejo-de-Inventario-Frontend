@@ -1,0 +1,67 @@
+/* =====================================================================
+   Estilos globales de EMI (diseño aprobado en Figma)
+   Los colores se definen como variables para usarlos en todos los componentes.
+   ===================================================================== */
+
+:root {
+  /* Paleta del diseño */
+  --emi-bg: #1f2327;            /* fondo de la aplicación */
+  --emi-surface: #292d33;       /* barra superior y pie */
+  --emi-border: #484d55;
+  --emi-text: #e9edf2;
+  --emi-text-muted: #a3aab3;
+  --emi-primary: #2f72be;       /* azul principal */
+  --emi-primary-hover: #3e83d0;
+  --emi-primary-light: #4d91dc;
+  --emi-accent-text: #6aa8e3;
+
+  --emi-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* Se ajustan las variables de Bootstrap para que sus componentes combinen con el diseño */
+  --bs-body-bg: var(--emi-bg);
+  --bs-body-color: var(--emi-text);
+  --bs-body-font-family: var(--emi-font);
+  --bs-link-color: var(--emi-primary-light);
+  --bs-link-hover-color: var(--emi-accent-text);
+}
+
+html {
+  min-width: 320px;
+  background: var(--emi-bg);
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  color: var(--emi-text);
+  background: var(--emi-bg);
+  font-family: var(--emi-font);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Foco visible para quien navega con teclado */
+:focus-visible {
+  outline: 2px solid var(--emi-primary-light);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

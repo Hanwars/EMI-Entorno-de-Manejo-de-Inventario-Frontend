@@ -1,12 +1,11 @@
-<!-- Toast -->
+
 @if (toast.show) {
   <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
-    <div class="toast show text-white" [ngClass]="toast.typeClass">
+    <div class="toast show text-white" [ngClass]="toast.typeClass" role="status" aria-live="polite">
       <div class="d-flex">
         <div class="toast-body">
           {{ toast.message | translate }}
         </div>
-
         <button
           type="button"
           class="btn-close btn-close-white me-2 m-auto"
@@ -18,86 +17,121 @@
   </div>
 }
 
-<div class="col-md-12 mt-4">
-  <h3 class="text-center">{{ 'register.title' | translate }}</h3>
+<div class="auth-area">
+  <section class="auth-card" aria-labelledby="register-title">
+    <div class="avatar-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4.5 20c.8-4.1 3.3-6.2 7.5-6.2s6.7 2.1 7.5 6.2" />
+      </svg>
+    </div>
 
-  <form
-    class="col-md-8 mx-auto"
-    #registerForm="ngForm"
-    (ngSubmit)="saveUser(registerForm)"
-  >
-    <!-- Nombre -->
-    <div class="form-group">
+    <div class="auth-heading">
+      <p class="eyebrow">{{ 'register.eyebrow' | translate }}</p>
+      <h1 id="register-title">{{ 'register.title' | translate }}</h1>
+      <p>{{ 'register.subtitle' | translate }}</p>
+    </div>
+
+    <form class="auth-form" #registerForm="ngForm" (ngSubmit)="saveUser(registerForm)" novalidate>
+      
       <label for="nombre">{{ 'register.name' | translate }}</label>
-
-      <input
-        type="text"
-        class="form-control"
-        id="nombre"
-        name="nombre"
-        #nombre="ngModel"
-        [(ngModel)]="user.nombre"
-        pattern="^(?=.*[a-z])(?=.*[A-Z]).{3,}$"
-        required
-      />
-
-      @if (!nombre.valid && nombre.touched) {
-        <small class="invalid-feedback d-block">
-          {{ 'register.nameInvalid' | translate }}
-        </small>
+      <div class="input-wrap">
+        <span class="input-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4.5 20c.8-4.1 3.3-6.2 7.5-6.2s6.7 2.1 7.5 6.2" />
+          </svg>
+        </span>
+        <input
+          type="text"
+          id="nombre"
+          name="nombre"
+          #nombre="ngModel"
+          [(ngModel)]="user.nombre"
+          pattern="^(?=.*[a-z])(?=.*[A-Z]).{3,}$"
+          required
+          autocomplete="name"
+          [placeholder]="'register.namePlaceholder' | translate"
+          [attr.aria-invalid]="nombre.invalid && nombre.touched"
+          [attr.aria-describedby]="nombre.invalid && nombre.touched ? 'nombre-error' : null"
+        />
+      </div>
+      @if (nombre.invalid && nombre.touched) {
+        <p class="field-error" id="nombre-error">{{ 'register.nameInvalid' | translate }}</p>
       }
-    </div>
 
-    <!-- Correo electrónico -->
-    <div class="form-group mt-3">
+    
       <label for="email">{{ 'register.email' | translate }}</label>
-
-      <input
-        type="email"
-        class="form-control"
-        id="email"
-        name="email"
-        #email="ngModel"
-        [(ngModel)]="user.email"
-        pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
-        required
-      />
-
-      @if (!email.valid && email.touched) {
-        <small class="invalid-feedback d-block">
-          {{ 'auth.emailInvalid' | translate }}
-        </small>
+      <div class="input-wrap">
+        <span class="input-icon email-icon" aria-hidden="true">&#64;</span>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          #email="ngModel"
+          [(ngModel)]="user.email"
+          pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+          required
+          autocomplete="email"
+          [placeholder]="'auth.emailPlaceholder' | translate"
+          [attr.aria-invalid]="email.invalid && email.touched"
+          [attr.aria-describedby]="email.invalid && email.touched ? 'email-error' : null"
+        />
+      </div>
+      @if (email.invalid && email.touched) {
+        <p class="field-error" id="email-error">{{ 'auth.emailInvalid' | translate }}</p>
       }
-    </div>
 
-    <!-- Contraseña -->
-    <div class="form-group mt-3 mb-3">
+      
       <label for="contrasena">{{ 'register.password' | translate }}</label>
-
-      <input
-        type="password"
-        class="form-control"
-        id="contrasena"
-        name="contrasena"
-        #contrasena="ngModel"
-        [(ngModel)]="user.contrasena"
-        pattern="^(?=.*[a-z])(?=.*[A-Z]).{6,}$"
-        required
-      />
-
-      @if (!contrasena.valid && contrasena.touched) {
-        <small class="invalid-feedback d-block">
-          {{ 'register.passwordInvalid' | translate }}
-        </small>
+      <div class="input-wrap">
+        <span class="input-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <rect x="5.5" y="10" width="13" height="10" rx="2" />
+            <path d="M8.5 10V7.5a3.5 3.5 0 0 1 7 0V10M12 14v2.5" />
+          </svg>
+        </span>
+        <input
+          [type]="mostrarContrasena ? 'text' : 'password'"
+          id="contrasena"
+          name="contrasena"
+          #contrasena="ngModel"
+          [(ngModel)]="user.contrasena"
+          pattern="^(?=.*[a-z])(?=.*[A-Z]).{6,}$"
+          required
+          autocomplete="new-password"
+          [placeholder]="'auth.passwordPlaceholder' | translate"
+          [attr.aria-invalid]="contrasena.invalid && contrasena.touched"
+          [attr.aria-describedby]="contrasena.invalid && contrasena.touched ? 'contrasena-error' : null"
+        />
+        <button
+          class="password-toggle"
+          type="button"
+          (click)="mostrarContrasena = !mostrarContrasena"
+          [attr.aria-pressed]="mostrarContrasena"
+          [attr.aria-label]="(mostrarContrasena ? 'auth.hidePassword' : 'auth.showPassword') | translate"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M2.5 12s3.4-5.2 9.5-5.2 9.5 5.2 9.5 5.2-3.4 5.2-9.5 5.2S2.5 12 2.5 12Z" />
+            <circle cx="12" cy="12" r="2.4" />
+            @if (!mostrarContrasena) {
+              <path class="eye-slash" d="m4 4 16 16" />
+            }
+          </svg>
+        </button>
+      </div>
+      @if (contrasena.invalid && contrasena.touched) {
+        <p class="field-error" id="contrasena-error">{{ 'register.passwordInvalid' | translate }}</p>
       }
-    </div>
 
-    <!-- Botón -->
-    <input
-      type="submit"
-      [value]="'register.submit' | translate"
-      [disabled]="registerForm.invalid"
-      class="btn btn-primary mt-2"
-    />
-  </form>
+      <button class="submit-button" type="submit" [disabled]="registerForm.invalid">
+        {{ 'register.submit' | translate }}
+      </button>
+    </form>
+
+    <p class="auth-prompt">
+      {{ 'register.haveAccount' | translate }}
+      <a [routerLink]="['/login']">{{ 'register.loginLink' | translate }}</a>
+    </p>
+  </section>
 </div>

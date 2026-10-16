@@ -25,7 +25,11 @@
     "details": "Keep track of your stock efficiently, view reports, and manage all your business information quickly and securely.",
     "start": "Get started",
     "learnMore": "Learn more",
-    "logoAlt": "EMI logo"
+    "logoAlt": "EMI logo",
+    "titleLine1": "Inventory Management",
+    "titleLine2": "Environment",
+    "lead": "A simple, secure platform to manage your business information.",
+    "createAccount": "Create account"
   },
   "error": {
     "title": "Page not found",
@@ -52,11 +56,20 @@
     "loginServerError": "Unexpected server error. Please try again later.",
     "emailRequired": "Email address is required.",
     "emailInvalid": "Enter a valid email address.",
-    "passwordRequired": "Password is required."
+    "passwordRequired": "Password is required.",
+    "welcome": "Welcome to EMI",
+    "loginSubtitle": "Enter your details to access the inventory system.",
+    "emailPlaceholder": "name@company.com",
+    "passwordPlaceholder": "Enter your password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "submit": "Sign in",
+    "noAccount": "Don't have an account yet?",
+    "registerLink": "Sign up"
   },
   "register": {
-    "title": "User registration",
-    "name": "Name",
+    "title": "Create an account",
+    "name": "Full name",
     "nameInvalid": "The name must contain at least 3 characters, including an uppercase and a lowercase letter.",
     "email": "Email address",
     "password": "Password",
@@ -65,7 +78,12 @@
     "success": "Registration completed! The user was saved successfully.",
     "error": "Registration failed",
     "duplicate": "This email address is already registered.",
-    "invalidForm": "Cannot register: check the required fields."
+    "invalidForm": "Cannot register: check the required fields.",
+    "eyebrow": "Join EMI",
+    "subtitle": "Fill in your details to start managing your inventory.",
+    "namePlaceholder": "Your full name",
+    "haveAccount": "Already have an account?",
+    "loginLink": "Log in"
   },
   "users": {
     "title": "Users",
@@ -111,7 +129,8 @@
     "delete": "Delete",
     "close": "Close",
     "home": "Home",
-    "toggleNavigation": "Toggle navigation"
+    "toggleNavigation": "Toggle navigation",
+    "mainNavigation": "Main navigation"
   },
   "language": {
     "spanish": "Spanish",

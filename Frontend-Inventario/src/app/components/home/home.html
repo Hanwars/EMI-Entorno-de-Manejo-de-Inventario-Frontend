@@ -1,28 +1,50 @@
-<div class="container py-5 mt-4">
-  @if (currentUser()) {
-    <div>
-      <h2 class="align-items-center">{{ 'home.welcome' | translate: { name: currentUser()?.name } }}</h2>
+<div class="home-area">
+  <section class="home-hero" aria-labelledby="home-title">
+    <div class="hero-copy">
+      @if (currentUser()) {
+        <p class="hero-welcome">{{ 'home.welcome' | translate: { name: currentUser()?.name } }}</p>
+      } @else {
+        <p class="hero-kicker">{{ 'app.title' | translate }}</p>
+      }
+
+      <h1 id="home-title">
+        {{ 'home.titleLine1' | translate }}
+        <span>{{ 'home.titleLine2' | translate }}</span>
+      </h1>
+
+      <p class="hero-lead">{{ 'home.lead' | translate }}</p>
+
+      @if (!currentUser()) {
+        <div class="hero-actions">
+          <a class="primary-cta" [routerLink]="['/login']">
+            {{ 'home.start' | translate }}
+            <span aria-hidden="true">→</span>
+          </a>
+          <a class="secondary-cta" [routerLink]="['/register']">
+            {{ 'home.createAccount' | translate }}
+          </a>
+        </div>
+      }
     </div>
-  }
-  <div class="row align-items-center">
-    <div class="col-md-6">
-      <h1 class="display-3 fw-bold">{{ 'app.title' | translate }}</h1>
-      <h2 class="mb-4">{{ 'app.fullTitle' | translate }}</h2>
-      <p class="lead">{{ 'home.description' | translate }}</p>
-      <p class="text-secondary">{{ 'home.details' | translate }}</p>
-      <div class="mt-5">
-        @if (!currentUser()) {
-          <button class="btn btn-danger btn-lg me-2" [routerLink]="['/login']">{{ 'home.start' | translate }}</button>
-        }
-        <button class="btn btn-outline-danger btn-lg">{{ 'home.learnMore' | translate }}</button>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div>
-        <div class="card-body text-center py-5">
-          <img src="../../../LogoEMI.png" [alt]="'home.logoAlt' | translate" class="img-fluid" />
+
+    <div class="hero-visual">
+      <div class="brand-lockup">
+        <svg viewBox="0 0 88 88" role="img" [attr.aria-label]="'home.logoAlt' | translate">
+          <defs>
+            <linearGradient id="emi-blue" x1="12" y1="8" x2="76" y2="80" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#62b7e8" />
+              <stop offset="1" stop-color="#2f72be" />
+            </linearGradient>
+          </defs>
+          <path d="m44 7 31 18v37L44 80 13 62V25L44 7Z" fill="none" stroke="url(#emi-blue)" stroke-width="6" />
+          <path d="m44 29 18 10v21L44 70 26 60V39l18-10Z" fill="url(#emi-blue)" />
+          <path d="m26 39 18 11 18-11M44 50v20" fill="none" stroke="#1f4f87" stroke-width="2" />
+        </svg>
+        <div>
+          <strong>{{ 'app.title' | translate }}</strong>
+          <span>{{ 'app.fullTitle' | translate }}</span>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </div>

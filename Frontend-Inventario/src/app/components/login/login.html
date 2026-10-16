@@ -1,78 +1,100 @@
-<div class="col-md-12 mt-4">
-  @if (status === 0) {
-    <div class="alert alert-danger mt-3" role="alert">
-      {{ 'auth.loginError' | translate }}
+<div class="login-area">
+  <section class="login-card" aria-labelledby="login-title">
+    <div class="avatar-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4.5 20c.8-4.1 3.3-6.2 7.5-6.2s6.7 2.1 7.5 6.2" />
+      </svg>
     </div>
-  } @else if (status === 1) {
-    <div class="alert alert-warning mt-3" role="alert">
-      {{ 'auth.loginServerError' | translate }}
+
+    <div class="login-heading">
+      <p class="eyebrow">{{ 'auth.welcome' | translate }}</p>
+      <h1 id="login-title">{{ 'auth.loginTitle' | translate }}</h1>
+      <p>{{ 'auth.loginSubtitle' | translate }}</p>
     </div>
-  }
 
-  <div class="col-md-4 mx-auto">
-    <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
-      <h3 class="text-center">{{ 'auth.loginTitle' | translate }}</h3>
+    @if (status === 0) {
+      <div class="form-alert form-alert--error" role="alert">
+        {{ 'auth.loginError' | translate }}
+      </div>
+    } @else if (status === 1) {
+      <div class="form-alert form-alert--warning" role="alert">
+        {{ 'auth.loginServerError' | translate }}
+      </div>
+    }
 
+    <form class="login-form" #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" novalidate>
       <!-- Correo electrónico -->
-      <div class="form-group">
-        <label for="email">{{ 'auth.email' | translate }}</label>
-
+      <label for="email">{{ 'auth.email' | translate }}</label>
+      <div class="input-wrap">
+        <span class="input-icon email-icon" aria-hidden="true">&#64;</span>
         <input
           type="email"
-          class="form-control"
           id="email"
           name="email"
           #email="ngModel"
           [(ngModel)]="user.email"
           required
           email
+          autocomplete="email"
+          [placeholder]="'auth.emailPlaceholder' | translate"
+          [attr.aria-invalid]="email.invalid && email.touched"
+          [attr.aria-describedby]="email.invalid && email.touched ? 'email-error' : null"
         />
-
-        @if (!email.valid && email.touched) {
-          <small class="invalid-feedback d-block">
-            {{ 'auth.emailInvalid' | translate }}
-          </small>
-        }
       </div>
+      @if (email.invalid && email.touched) {
+        <p class="field-error" id="email-error">{{ 'auth.emailInvalid' | translate }}</p>
+      }
 
-      <!-- Contraseña -->
-      <div class="form-group">
-        <label for="contrasena">{{ 'auth.password' | translate }}</label>
-
+     
+      <label for="contrasena">{{ 'auth.password' | translate }}</label>
+      <div class="input-wrap">
+        <span class="input-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <rect x="5.5" y="10" width="13" height="10" rx="2" />
+            <path d="M8.5 10V7.5a3.5 3.5 0 0 1 7 0V10M12 14v2.5" />
+          </svg>
+        </span>
         <input
-          type="password"
-          class="form-control"
+          [type]="mostrarContrasena ? 'text' : 'password'"
           id="contrasena"
           name="contrasena"
           #contrasena="ngModel"
           [(ngModel)]="user.contrasena"
           required
+          autocomplete="current-password"
+          [placeholder]="'auth.passwordPlaceholder' | translate"
+          [attr.aria-invalid]="contrasena.invalid && contrasena.touched"
+          [attr.aria-describedby]="contrasena.invalid && contrasena.touched ? 'contrasena-error' : null"
         />
-
-        @if (!contrasena.valid && contrasena.touched) {
-          <small class="invalid-feedback d-block">
-            {{ 'auth.passwordRequired' | translate }}
-          </small>
-        }
-      </div>
-
-      <!-- Botones -->
-      <div class="d-flex justify-content-between mt-3">
-        <input
-          class="btn btn-primary"
-          type="submit"
-          [value]="'auth.login' | translate"
-          [disabled]="loginForm.invalid"
-        />
-
         <button
-          [routerLink]="['/home']"
+          class="password-toggle"
           type="button"
-          class="btn btn-secondary"
+          (click)="mostrarContrasena = !mostrarContrasena"
+          [attr.aria-pressed]="mostrarContrasena"
+          [attr.aria-label]="(mostrarContrasena ? 'auth.hidePassword' : 'auth.showPassword') | translate"
         >
-          {{ 'common.cancel' | translate }}
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M2.5 12s3.4-5.2 9.5-5.2 9.5 5.2 9.5 5.2-3.4 5.2-9.5 5.2S2.5 12 2.5 12Z" />
+            <circle cx="12" cy="12" r="2.4" />
+            @if (!mostrarContrasena) {
+              <path class="eye-slash" d="m4 4 16 16" />
+            }
+          </svg>
         </button>
       </div>
+      @if (contrasena.invalid && contrasena.touched) {
+        <p class="field-error" id="contrasena-error">{{ 'auth.passwordRequired' | translate }}</p>
+      }
+
+      <button class="submit-button" type="submit" [disabled]="loginForm.invalid">
+        {{ 'auth.submit' | translate }}
+      </button>
     </form>
-  </div>
+
+    <p class="register-prompt">
+      {{ 'auth.noAccount' | translate }}
+      <a [routerLink]="['/register']">{{ 'auth.registerLink' | translate }}</a>
+    </p>
+  </section>
 </div>

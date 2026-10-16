@@ -1,91 +1,89 @@
+
 .selector-idioma {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 10px;
 }
 
-/* Etiqueta "Idioma:" con el icono del globo, para que se entienda qué hace el control. */
 .selector-idioma__etiqueta {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  font-size: 0.95rem;
-  color: var(--bs-secondary-color);
+  gap: 7px;
+  color: #cbd0d7;
+  font-size: 0.88rem;
   white-space: nowrap;
 }
 
 .selector-idioma__icono {
-  width: 1.15rem;
-  height: 1.15rem;
+  width: 17px;
+  height: 17px;
 }
 
-/* Cápsula que agrupa las dos opciones. */
 .selector-idioma__opciones {
   display: inline-flex;
-  gap: 0.25rem;
-  padding: 0.25rem;
-  border: 1px solid var(--bs-border-color);
+  padding: 3px;
+  border: 1px solid var(--emi-border, #484d55);
   border-radius: 999px;
-  background-color: rgba(255, 255, 255, 0.04);
 }
 
 .selector-idioma__opcion {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
-  min-width: 6rem;
-  min-height: 38px;
-  padding: 0.3rem 0.9rem;
-  border: none;
+  gap: 7px;
+  min-width: 96px;
+  padding: 9px 16px;
+  border: 0;
   border-radius: 999px;
+  color: #e4e6ea;
   background: transparent;
-  color: var(--bs-body-color);
-  font-size: 1rem;
-  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  font-size: 0.85rem;
+  font-weight: 650;
+  transition: color 160ms ease, background 160ms ease;
 }
 
 .selector-idioma__opcion:hover:not(.selector-idioma__opcion--activa) {
-  background-color: rgba(255, 255, 255, 0.08);
+  background: rgb(255 255 255 / 0.06);
 }
 
-.selector-idioma__opcion:focus-visible {
-  outline: 2px solid var(--bs-danger);
-  outline-offset: 2px;
-}
-
-/* Idioma activo: mismo rojo que los botones principales de la página, con marca de verificación. */
 .selector-idioma__opcion--activa {
-  background-color: var(--bs-danger);
   color: #fff;
-  font-weight: 600;
-  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.35);
+  background: var(--emi-primary, #2f72be);
+  box-shadow: 0 3px 10px rgb(47 114 190 / 0.22);
   cursor: default;
 }
 
 .selector-idioma__check {
-  width: 1rem;
-  height: 1rem;
+  width: 14px;
+  height: 14px;
 }
 
-/* En pantallas táctiles (tabletas y teléfonos) los botones son más grandes para pulsarlos con el dedo. */
+
 @media (pointer: coarse) {
   .selector-idioma__opcion {
-    min-width: 6.5rem;
     min-height: 44px;
-    padding: 0.4rem 1rem;
   }
 }
 
-/* Con la barra plegada (tabletas en vertical y teléfonos), el selector ocupa todo el ancho. */
+
+@media (min-width: 992px) and (max-width: 1100px) {
+  .selector-idioma__etiqueta {
+    display: none;
+  }
+
+  .selector-idioma__opcion {
+    min-width: auto;
+    padding-inline: 11px;
+  }
+}
+
+
 @media (max-width: 991.98px) {
   .selector-idioma {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.4rem;
-    padding: 0.5rem 0;
+    gap: 8px;
   }
 
   .selector-idioma__opciones {
