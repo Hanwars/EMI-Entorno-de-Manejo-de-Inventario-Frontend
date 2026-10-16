@@ -3,6 +3,7 @@ import { environment as enviroment } from '../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Usuario } from '../models/usuario';
+import { AuthService } from './auth.service';
 
 export interface CreateUserResponse {
   idGenerado: number;
@@ -14,7 +15,7 @@ export interface CreateUserResponse {
 export class UserService {
   private readonly url: string;
 
-  constructor(private _http: HttpClient) {
+  constructor(private _http: HttpClient, private auth: AuthService) {
     this.url = enviroment.apiUrl;
   }
 
@@ -26,7 +27,7 @@ export class UserService {
       email: user.email,
     };
 
-    const token = sessionStorage.getItem('token');
+    const token = this.auth.getToken();
 
     let headers = new HttpHeaders().set('Content-Type', 'application/json');
 
