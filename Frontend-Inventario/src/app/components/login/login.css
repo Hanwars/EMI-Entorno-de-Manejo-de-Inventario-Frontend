@@ -18,7 +18,7 @@
     inset 0 1px 0 rgb(255 255 255 / 0.38);
 }
 
-
+/* Ícono de usuario que sobresale arriba de la tarjeta */
 .avatar-mark {
   position: absolute;
   top: 0;
@@ -45,7 +45,7 @@
   stroke-width: 1.45;
 }
 
-
+/* Encabezado */
 .login-heading {
   margin-bottom: 28px;
   text-align: center;
@@ -77,7 +77,7 @@
   line-height: 1.55;
 }
 
-
+/* Mensajes de error del inicio de sesión */
 .form-alert {
   margin: -8px 0 20px;
   padding: 11px 14px;
@@ -99,7 +99,7 @@
   border: 1px solid #e3c98b;
 }
 
-
+/* Formulario */
 .login-form > label {
   display: block;
   margin: 0 0 7px 3px;
@@ -193,7 +193,7 @@
   stroke: var(--emi-primary, #2f72be);
 }
 
-
+/* Error debajo de un campo */
 .field-error {
   margin: -10px 0 14px 3px;
   color: #b42318;
@@ -201,8 +201,12 @@
   font-weight: 600;
 }
 
-
+/* Botón principal */
 .submit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   width: 100%;
   height: 49px;
   margin-top: 6px;
@@ -242,7 +246,29 @@
   outline-offset: 2px;
 }
 
+/* Indicador de carga dentro del botón */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgb(255 255 255 / 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: girar 0.8s linear infinite;
+}
 
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2s;
+  }
+}
+
+/* Enlace a registro */
 .register-prompt {
   margin: 24px 0 0;
   color: #6f767e;
@@ -261,7 +287,7 @@
   text-underline-offset: 3px;
 }
 
-
+/* Teléfonos */
 @media (max-width: 760px) {
   .login-area {
     padding: 82px 18px 64px;
@@ -273,7 +299,7 @@
   }
 }
 
-
+/* Pantallas bajas (tabletas en horizontal) */
 @media (max-height: 760px) and (min-width: 761px) {
   .login-area {
     padding-block: 70px 42px;

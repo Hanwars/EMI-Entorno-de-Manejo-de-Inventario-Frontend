@@ -65,7 +65,8 @@
     "hidePassword": "Hide password",
     "submit": "Sign in",
     "noAccount": "Don't have an account yet?",
-    "registerLink": "Sign up"
+    "registerLink": "Sign up",
+    "submitting": "Signing in..."
   },
   "register": {
     "title": "Create an account",

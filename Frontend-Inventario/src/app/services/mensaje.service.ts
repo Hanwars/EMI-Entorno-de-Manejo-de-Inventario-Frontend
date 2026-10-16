@@ -24,12 +24,16 @@ export class MensajeService {
     return window.confirm(`${titulo}\n\n${mensaje}`);
   }
 
-  mostrarErrorHttp(error: HttpErrorResponse | number): void {
+  /**
+   * Devuelve la clave de traducción que corresponde a un código HTTP.
+   * Se separó de mostrarErrorHttp para que las pantallas que muestran
+   * el error dentro de la página (como el login) usen la misma regla.
+   */
+  claveErrorHttp(error: HttpErrorResponse | number): string {
     const status = typeof error === 'number' ? error : error.status;
 
     if (status === 0) {
-      this.mostrarError('errors.network');
-      return;
+      return 'errors.network';
     }
 
     const clavesPorEstado: Record<number, string> = {
@@ -41,10 +45,10 @@ export class MensajeService {
       422: 'errors.validation',
     };
 
-    const clave = status >= 500
-      ? 'errors.server'
-      : (clavesPorEstado[status] ?? 'errors.unknown');
+    return status >= 500 ? 'errors.server' : (clavesPorEstado[status] ?? 'errors.unknown');
+  }
 
-    this.mostrarError(clave);
+  mostrarErrorHttp(error: HttpErrorResponse | number): void {
+    this.mostrarError(this.claveErrorHttp(error));
   }
 }
