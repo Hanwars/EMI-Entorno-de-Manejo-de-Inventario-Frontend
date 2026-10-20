@@ -119,7 +119,32 @@
     "title": "Compras"
   },
   "roles": {
-    "title": "Roles"
+    "title": "Roles",
+    "section": "Administración",
+    "description": "Consulta los roles registrados y las opciones disponibles para administrarlos.",
+    "create": "Nuevo rol",
+    "registered": "Roles registrados",
+    "summaryNote": "Vista general de permisos y perfiles",
+    "listTitle": "Listado de roles",
+    "listDescription": "Roles disponibles en el sistema",
+    "search": "Buscar un rol",
+    "loading": "Cargando roles…",
+    "emptyTitle": "Todavía no hay roles registrados",
+    "emptyDescription": "Cuando se registren roles, aparecerán en este listado para que puedas consultarlos y administrarlos.",
+    "createFirst": "Registrar primer rol",
+    "id": "ID",
+    "name": "Nombre del rol",
+    "users": "Usuarios",
+    "status": "Estado",
+    "statusActive": "Activo",
+    "statusRestricted": "Restringido",
+    "actions": "Acciones",
+    "moreActions": "Más acciones para este rol",
+    "showing": "Mostrando {{count}} roles de ejemplo",
+    "pagination": "Paginación del listado de roles",
+    "previous": "Página anterior",
+    "next": "Página siguiente",
+    "designNote": "Diseño preliminar: los registros son de ejemplo y las acciones aún no están conectadas."
   },
   "common": {
     "language": "Idioma",

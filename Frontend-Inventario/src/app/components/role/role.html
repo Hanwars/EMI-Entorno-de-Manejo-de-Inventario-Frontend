@@ -1,0 +1,137 @@
+<section class="roles-page">
+  <div class="roles-heading">
+    <div class="roles-heading__copy">
+      <div class="roles-eyebrow">{{ 'roles.section' | translate }}</div>
+      <h1>{{ 'roles.title' | translate }}</h1>
+      <p>{{ 'roles.description' | translate }}</p>
+    </div>
+    <button class="roles-primary" type="button" disabled>
+      <svg class="roles-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 12h14" />
+        <path d="M12 5v14" />
+      </svg>
+      {{ 'roles.create' | translate }}
+    </button>
+  </div>
+
+  <div class="roles-summary">
+    <div class="roles-summary__icon" aria-hidden="true">
+      <svg class="roles-icon" viewBox="0 0 24 24">
+        <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+        <path d="m9 12 2 2 4-4" />
+      </svg>
+    </div>
+    <div>
+      <span class="roles-summary__label">{{ 'roles.registered' | translate }}</span>
+      <strong>{{ estadoVista === 'datos' ? roles.length : '—' }}</strong>
+    </div>
+    <span class="roles-summary__note">{{ 'roles.summaryNote' | translate }}</span>
+  </div>
+
+  <section class="roles-panel" aria-labelledby="roles-list-title">
+    <div class="roles-panel__header">
+      <div>
+        <h2 id="roles-list-title">{{ 'roles.listTitle' | translate }}</h2>
+        <p>{{ 'roles.listDescription' | translate }}</p>
+      </div>
+      <label class="roles-search">
+        <svg class="roles-icon roles-search__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+        <span class="visually-hidden">{{ 'roles.search' | translate }}</span>
+        <input type="search" [placeholder]="'roles.search' | translate" disabled />
+      </label>
+    </div>
+
+    @if (estadoVista === 'cargando') {
+      <div class="roles-loading" role="status" aria-live="polite">
+        <span class="roles-spinner" aria-hidden="true"></span>
+        <span>{{ 'roles.loading' | translate }}</span>
+      </div>
+    } @else if (estadoVista === 'vacio' || roles.length === 0) {
+      <div class="roles-empty">
+        <div class="roles-empty__icon" aria-hidden="true">▤</div>
+        <h3>{{ 'roles.emptyTitle' | translate }}</h3>
+        <p>{{ 'roles.emptyDescription' | translate }}</p>
+        <button class="roles-secondary" type="button" disabled>{{ 'roles.createFirst' | translate }}</button>
+      </div>
+    } @else {
+      <div class="roles-table-wrap">
+        <table class="roles-table">
+          <thead>
+            <tr>
+              <th scope="col">{{ 'roles.id' | translate }}</th>
+              <th scope="col">{{ 'roles.name' | translate }}</th>
+              <th scope="col">{{ 'roles.users' | translate }}</th>
+              <th scope="col">{{ 'roles.status' | translate }}</th>
+              <th scope="col" class="roles-table__actions-heading">{{ 'roles.actions' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (rol of roles; track rol.role_id) {
+              <tr>
+                <td>
+                  <span class="roles-id">{{ rol.role_id < 10 ? '0' + rol.role_id : rol.role_id }}</span>
+                </td>
+                <td>
+                  <div class="roles-name-cell">
+                    <span class="roles-avatar" aria-hidden="true">{{ rol.nombre.charAt(0) }}</span>
+                    <span class="roles-name">{{ rol.nombre }}</span>
+                  </div>
+                </td>
+                <td>{{ $any(rol).usuarios ?? '—' }}</td>
+                <td>
+                  @let estado = $any(rol).estado;
+                  @if (estado) {
+                    <span class="roles-status" [class.roles-status--restricted]="estado === 'restringido'">
+                      {{ (estado === 'restringido' ? 'roles.statusRestricted' : 'roles.statusActive') | translate }}
+                    </span>
+                  } @else {
+                    <span class="roles-muted">—</span>
+                  }
+                </td>
+                <td>
+                  <div class="roles-actions">
+                    <button type="button" class="roles-action" [attr.aria-label]="'common.edit' | translate" disabled>
+                      <svg class="roles-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
+                        <path d="m15 5 4 4" />
+                      </svg>
+                      <span class="roles-action__label">{{ 'common.edit' | translate }}</span>
+                    </button>
+                    <button type="button" class="roles-action" [attr.aria-label]="'common.delete' | translate" disabled>
+                      <svg class="roles-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 6h18" />
+                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                        <path d="M10 11v6" />
+                        <path d="M14 11v6" />
+                      </svg>
+                      <span class="roles-action__label">{{ 'common.delete' | translate }}</span>
+                    </button>
+                    <button type="button" class="roles-more" [attr.aria-label]="'roles.moreActions' | translate" disabled>
+                      <svg class="roles-icon roles-icon--dots" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="5" cy="12" r="1" />
+                        <circle cx="12" cy="12" r="1" />
+                        <circle cx="19" cy="12" r="1" />
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="roles-panel__footer">
+        <span>{{ 'roles.showing' | translate:{ count: roles.length } }}</span>
+        <div class="roles-pagination" aria-label="{{ 'roles.pagination' | translate }}">
+          <button type="button" disabled aria-label="{{ 'roles.previous' | translate }}">‹</button>
+          <span>1</span>
+          <button type="button" disabled aria-label="{{ 'roles.next' | translate }}">›</button>
+        </div>
+      </div>
+    }
+  </section>
+</section>

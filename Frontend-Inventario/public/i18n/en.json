@@ -119,7 +119,32 @@
     "title": "Purchases"
   },
   "roles": {
-    "title": "Roles"
+    "title": "Roles",
+    "section": "Administration",
+    "description": "Review registered roles and the available options to manage them.",
+    "create": "New role",
+    "registered": "Registered roles",
+    "summaryNote": "Overview of profiles and permissions",
+    "listTitle": "Roles list",
+    "listDescription": "Roles available in the system",
+    "search": "Search for a role",
+    "loading": "Loading roles…",
+    "emptyTitle": "No roles have been registered yet",
+    "emptyDescription": "Once roles are registered, they will appear here so you can review and manage them.",
+    "createFirst": "Register first role",
+    "id": "ID",
+    "name": "Role name",
+    "users": "Users",
+    "status": "Status",
+    "statusActive": "Active",
+    "statusRestricted": "Restricted",
+    "actions": "Actions",
+    "moreActions": "More actions for this role",
+    "showing": "Showing {{count}} sample roles",
+    "pagination": "Roles list pagination",
+    "previous": "Previous page",
+    "next": "Next page",
+    "designNote": "Preliminary design: records are examples and actions are not connected yet."
   },
   "common": {
     "language": "Language",
