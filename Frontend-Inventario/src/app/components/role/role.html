@@ -5,7 +5,7 @@
       <h1>{{ 'roles.title' | translate }}</h1>
       <p>{{ 'roles.description' | translate }}</p>
     </div>
-    <button class="roles-primary" type="button" disabled>
+    <button class="roles-primary" type="button" (click)="abrirFormulario()">
       <svg class="roles-icon" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M5 12h14" />
         <path d="M12 5v14" />
@@ -27,6 +27,22 @@
     </div>
     <span class="roles-summary__note">{{ 'roles.summaryNote' | translate }}</span>
   </div>
+
+  <!-- Mensaje de éxito al registrar un rol -->
+  @if (rolRegistrado(); as nombre) {
+    <div class="roles-alert" role="status">
+      {{ 'roles.form.created' | translate: { name: nombre } }}
+    </div>
+  }
+
+  <!-- Formulario para registrar un rol (ventana modal) -->
+  @if (formularioAbierto()) {
+    <app-role-form
+      [rolesExistentes]="roles"
+      (guardado)="alGuardarRol($event)"
+      (cancelado)="cerrarFormulario()"
+    />
+  }
 
   <section class="roles-panel" aria-labelledby="roles-list-title">
     <div class="roles-panel__header">
@@ -54,7 +70,7 @@
         <div class="roles-empty__icon" aria-hidden="true">▤</div>
         <h3>{{ 'roles.emptyTitle' | translate }}</h3>
         <p>{{ 'roles.emptyDescription' | translate }}</p>
-        <button class="roles-secondary" type="button" disabled>{{ 'roles.createFirst' | translate }}</button>
+        <button class="roles-secondary" type="button" (click)="abrirFormulario()">{{ 'roles.createFirst' | translate }}</button>
       </div>
     } @else {
       <div class="roles-table-wrap">

@@ -78,6 +78,25 @@
   cursor: default;
 }
 
+
+.roles-primary:not(:disabled),
+.roles-secondary:not(:disabled) {
+  cursor: pointer;
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+.roles-primary:not(:disabled):hover,
+.roles-secondary:not(:disabled):hover {
+  background: #3561ad;
+  transform: translateY(-1px);
+}
+
+.roles-primary:focus-visible,
+.roles-secondary:focus-visible {
+  outline: 2px solid var(--roles-primary);
+  outline-offset: 3px;
+}
+
 .roles-secondary {
   min-height: 40px;
   margin-top: 7px;
@@ -543,4 +562,16 @@
   .roles-panel__footer {
     padding: 14px 16px;
   }
+}
+
+
+.roles-alert {
+  margin: 0 0 18px;
+  padding: 13px 16px;
+  border: 1px solid #bfe3cc;
+  border-radius: 12px;
+  background: #e3f3ea;
+  color: #2c7a50;
+  font-size: 0.88rem;
+  font-weight: 700;
 }

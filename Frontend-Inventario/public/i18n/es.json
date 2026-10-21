@@ -144,7 +144,24 @@
     "pagination": "Paginación del listado de roles",
     "previous": "Página anterior",
     "next": "Página siguiente",
-    "designNote": "Diseño preliminar: los registros son de ejemplo y las acciones aún no están conectadas."
+    "designNote": "Diseño preliminar: los registros son de ejemplo y las acciones aún no están conectadas.",
+
+    "form": {
+  "createTitle": "Registrar rol",
+  "createDescription": "Define el nombre del nuevo rol. Los permisos se asignan después.",
+  "nameLabel": "Nombre del rol",
+  "namePlaceholder": "Ej.: Supervisor de bodega",
+  "nameHint": "Entre 3 y 50 caracteres. Solo letras, números y espacios.",
+  "required": "El nombre del rol es obligatorio.",
+  "minLength": "El nombre debe tener al menos 3 caracteres.",
+  "pattern": "Usa solo letras, números y espacios.",
+  "duplicate": "Ya existe un rol con ese nombre.",
+  "permissionsNote": "Después de registrarlo podrás asignarle permisos desde la lista de roles.",
+  "save": "Guardar rol",
+  "saving": "Guardando...",
+  "notAvailable": "El servicio para registrar roles todavía no está disponible.",
+  "created": "El rol {{name}} se registró correctamente."
+}
   },
   "common": {
     "language": "Idioma",

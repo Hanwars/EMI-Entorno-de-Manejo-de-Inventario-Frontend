@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { Rol } from '../../models/rol';
+import { RoleForm } from '../role-form/role-form';
 
-// Diseño estático: todavía no consulta la API ni ejecuta acciones de administración.
-// Cambiar estadoVista manualmente permite revisar las variantes visuales.
+
 type EstadoVista = 'datos' | 'cargando' | 'vacio';
 
 interface RolVista {
@@ -12,7 +13,7 @@ interface RolVista {
 
 @Component({
   selector: 'app-role',
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, RoleForm],
   templateUrl: './role.html',
   styleUrl: './role.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,10 +21,32 @@ interface RolVista {
 export class Role {
   estadoVista: EstadoVista = 'datos';
 
-  // Datos de ejemplo basados únicamente en los campos role_id y nombre del modelo Rol.
-  readonly roles: RolVista[] = [
+
+  roles: RolVista[] = [
     { role_id: 1, nombre: 'Administrador' },
     { role_id: 2, nombre: 'Encargado de inventario' },
     { role_id: 3, nombre: 'Consulta' },
   ];
+
+ 
+  readonly formularioAbierto = signal(false);
+
+
+  readonly rolRegistrado = signal<string | null>(null);
+
+  abrirFormulario(): void {
+    this.rolRegistrado.set(null);
+    this.formularioAbierto.set(true);
+  }
+
+  cerrarFormulario(): void {
+    this.formularioAbierto.set(false);
+  }
+
+  alGuardarRol(rol: Rol): void {
+    this.roles = [...this.roles, { role_id: rol.role_id, nombre: rol.nombre }];
+    this.estadoVista = 'datos';
+    this.formularioAbierto.set(false);
+    this.rolRegistrado.set(rol.nombre);
+  }
 }

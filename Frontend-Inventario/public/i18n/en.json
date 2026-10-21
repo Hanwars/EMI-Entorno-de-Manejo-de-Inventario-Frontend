@@ -144,7 +144,24 @@
     "pagination": "Roles list pagination",
     "previous": "Previous page",
     "next": "Next page",
-    "designNote": "Preliminary design: records are examples and actions are not connected yet."
+    "designNote": "Preliminary design: records are examples and actions are not connected yet.",
+    
+    "form": {
+  "createTitle": "Register role",
+  "createDescription": "Set the name of the new role. Permissions are assigned later.",
+  "nameLabel": "Role name",
+  "namePlaceholder": "E.g.: Warehouse supervisor",
+  "nameHint": "Between 3 and 50 characters. Letters, numbers and spaces only.",
+  "required": "The role name is required.",
+  "minLength": "The name must be at least 3 characters long.",
+  "pattern": "Use only letters, numbers and spaces.",
+  "duplicate": "A role with that name already exists.",
+  "permissionsNote": "After registering it, you can assign permissions from the roles list.",
+  "save": "Save role",
+  "saving": "Saving...",
+  "notAvailable": "The service to register roles is not available yet.",
+  "created": "The role {{name}} was registered successfully."
+}
   },
   "common": {
     "language": "Language",

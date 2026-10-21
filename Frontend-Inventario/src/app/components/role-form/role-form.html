@@ -1,0 +1,96 @@
+<dialog
+  #dialogo
+  class="role-dialog"
+  aria-labelledby="role-form-title"
+  aria-describedby="role-form-description"
+  (cancel)="alPresionarEscape($event)"
+>
+  <form class="role-form" #rolForm="ngForm" (ngSubmit)="guardar(rolForm)" [attr.aria-busy]="guardando()" novalidate>
+    <header class="role-form__header">
+      <div class="role-form__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+          <path d="M12 9v6M9 12h6" />
+        </svg>
+      </div>
+      <div class="role-form__titles">
+        <h2 id="role-form-title">{{ 'roles.form.createTitle' | translate }}</h2>
+        <p id="role-form-description">{{ 'roles.form.createDescription' | translate }}</p>
+      </div>
+      <button
+        type="button"
+        class="role-form__close"
+        (click)="cancelar()"
+        [disabled]="guardando()"
+        [attr.aria-label]="'common.close' | translate"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M18 6 6 18M6 6l12 12" />
+        </svg>
+      </button>
+    </header>
+
+    @if (errorClave(); as clave) {
+      <div class="role-form__alert" role="alert">{{ clave | translate }}</div>
+    }
+
+    <div class="role-form__body">
+      <label class="role-form__label" for="rol-nombre">{{ 'roles.form.nameLabel' | translate }}</label>
+
+      @let tocado = nombreCtrl.touched || rolForm.submitted;
+      @let conError = tocado && (nombreCtrl.invalid || esDuplicado());
+
+      <input
+        id="rol-nombre"
+        name="nombre"
+        type="text"
+        class="role-form__input"
+        [(ngModel)]="nombre"
+        (ngModelChange)="errorClave.set(null)"
+        #nombreCtrl="ngModel"
+        required
+        minlength="3"
+        [maxlength]="maxCaracteres"
+        pattern="^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 ]+$"
+        autocomplete="off"
+        autofocus
+        [placeholder]="'roles.form.namePlaceholder' | translate"
+        [attr.aria-invalid]="conError"
+        [attr.aria-describedby]="conError ? 'rol-nombre-error rol-nombre-hint' : 'rol-nombre-hint'"
+      />
+
+      <div class="role-form__meta">
+        <p class="role-form__hint" id="rol-nombre-hint">{{ 'roles.form.nameHint' | translate }}</p>
+        <span class="role-form__counter" aria-hidden="true">{{ nombre.length }}/{{ maxCaracteres }}</span>
+      </div>
+
+      @if (tocado) {
+        @if (nombreCtrl.hasError('required')) {
+          <p class="role-form__error" id="rol-nombre-error">{{ 'roles.form.required' | translate }}</p>
+        } @else if (nombreCtrl.hasError('minlength')) {
+          <p class="role-form__error" id="rol-nombre-error">{{ 'roles.form.minLength' | translate }}</p>
+        } @else if (nombreCtrl.hasError('pattern')) {
+          <p class="role-form__error" id="rol-nombre-error">{{ 'roles.form.pattern' | translate }}</p>
+        } @else if (esDuplicado()) {
+          <p class="role-form__error" id="rol-nombre-error">{{ 'roles.form.duplicate' | translate }}</p>
+        }
+      }
+
+      <p class="role-form__note">{{ 'roles.form.permissionsNote' | translate }}</p>
+    </div>
+
+    <footer class="role-form__footer">
+      <button type="button" class="role-form__secondary" (click)="cancelar()" [disabled]="guardando()">
+        {{ 'common.cancel' | translate }}
+      </button>
+      <button type="submit" class="role-form__primary" [disabled]="guardando()">
+        @if (guardando()) {
+          <span class="role-form__spinner" aria-hidden="true"></span>
+          {{ 'roles.form.saving' | translate }}
+        } @else {
+          {{ 'roles.form.save' | translate }}
+        }
+      </button>
+    </footer>
+  </form>
+</dialog>
