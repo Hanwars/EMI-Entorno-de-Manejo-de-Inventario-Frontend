@@ -1,0 +1,135 @@
+<section class="users-page" aria-labelledby="users-title">
+  <div class="users-heading">
+    <div>
+      <p class="users-eyebrow">{{ 'users.section' | translate }}</p>
+      <h1 id="users-title">{{ 'users.title' | translate }}</h1>
+      <p>{{ 'users.description' | translate }}</p>
+    </div>
+    <a class="users-primary" routerLink="/register">
+      <svg class="users-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 12h14" />
+        <path d="M12 5v14" />
+      </svg>
+      {{ 'users.create' | translate }}
+    </a>
+  </div>
+
+  <div class="users-summary-grid">
+    <article class="users-summary">
+      <span class="users-summary__icon" aria-hidden="true">
+        <svg class="users-icon" viewBox="0 0 24 24">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="10" cy="7" r="4" />
+          <path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+      </span>
+      <div>
+        <span class="users-summary__label">{{ 'users.registered' | translate }}</span>
+        <strong>{{ users.length }}</strong>
+      </div>
+    </article>
+
+    <article class="users-summary">
+      <span class="users-summary__icon users-summary__icon--active" aria-hidden="true">
+        <svg class="users-icon" viewBox="0 0 24 24">
+          <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z" />
+          <path d="m9 12 2 2 4-4" />
+        </svg>
+      </span>
+      <div>
+        <span class="users-summary__label">{{ 'users.activeAccounts' | translate }}</span>
+        <strong>{{ activeUsers }}</strong>
+      </div>
+    </article>
+  </div>
+
+  <section class="users-panel" aria-labelledby="users-list-title">
+    <div class="users-panel__header">
+      <div>
+        <h2 id="users-list-title">{{ 'users.listTitle' | translate }}</h2>
+        <p>{{ 'users.listDescription' | translate }}</p>
+      </div>
+      <label class="users-search">
+        <svg class="users-icon users-search__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+        <span class="visually-hidden">{{ 'users.search' | translate }}</span>
+        <input
+          type="search"
+          readonly
+          [placeholder]="'users.searchPlaceholder' | translate"
+        />
+      </label>
+    </div>
+
+    <div class="users-table-wrap">
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th scope="col">{{ 'users.id' | translate }}</th>
+            <th scope="col">{{ 'users.user' | translate }}</th>
+            <th scope="col">{{ 'users.email' | translate }}</th>
+            <th scope="col">{{ 'users.role' | translate }}</th>
+            <th scope="col">{{ 'users.status' | translate }}</th>
+            <th scope="col" class="users-table__actions-heading">{{ 'users.actions' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users; track user.id) {
+            <tr>
+              <td><span class="users-id">{{ user.id }}</span></td>
+              <td>
+                <div class="users-identity">
+                  <span class="users-avatar" aria-hidden="true">{{ initials(user.name) }}</span>
+                  <span class="users-identity__copy">
+                    <strong>{{ user.name }}</strong>
+                    <small>@{{ user.username }}</small>
+                  </span>
+                </div>
+              </td>
+              <td><span class="users-email">{{ user.email }}</span></td>
+              <td><span class="users-role">{{ user.role }}</span></td>
+              <td>
+                <span class="users-status" [class.users-status--inactive]="!user.active">
+                  {{ (user.active ? 'users.statusActive' : 'users.statusInactive') | translate }}
+                </span>
+              </td>
+              <td>
+                <div class="users-actions">
+                  <button type="button" disabled [attr.aria-label]="('users.edit' | translate) + ' ' + user.name">
+                    <svg class="users-icon" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
+                      <path d="m15 5 4 4" />
+                    </svg>
+                    <span>{{ 'users.edit' | translate }}</span>
+                  </button>
+                  <button class="users-actions__delete" type="button" disabled [attr.aria-label]="('users.delete' | translate) + ' ' + user.name">
+                    <svg class="users-icon" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M3 6h18" />
+                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                      <path d="M10 11v6" />
+                      <path d="M14 11v6" />
+                    </svg>
+                    <span>{{ 'users.delete' | translate }}</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <div class="users-panel__footer">
+      <span>
+        {{ 'users.showing' | translate: { visible: users.length, total: users.length } }}
+      </span>
+      <div class="users-pagination" [attr.aria-label]="'users.pagination' | translate">
+        <button type="button" disabled [attr.aria-label]="'users.previous' | translate">‹</button>
+        <span aria-current="page">1</span>
+        <button type="button" disabled [attr.aria-label]="'users.next' | translate">›</button>
+      </div>
+    </div>
+  </section>
+</section>
