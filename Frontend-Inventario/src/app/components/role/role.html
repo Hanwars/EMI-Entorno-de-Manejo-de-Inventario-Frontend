@@ -35,6 +35,12 @@
     </div>
   }
 
+  @if (rolEliminado(); as nombre) {
+    <div class="roles-alert" role="status">
+      {{ 'roles.deleted' | translate: { name: nombre } }}
+    </div>
+  }
+
   <!-- Formulario para registrar un rol (ventana modal) -->
   @if (formularioAbierto()) {
     <app-role-form
@@ -116,7 +122,12 @@
                       </svg>
                       <span class="roles-action__label">{{ 'common.edit' | translate }}</span>
                     </button>
-                    <button type="button" class="roles-action" [attr.aria-label]="'common.delete' | translate" disabled>
+                    <button
+                      type="button"
+                      class="roles-action"
+                      [attr.aria-label]="'roles.deleteRole' | translate: { name: rol.nombre }"
+                      (click)="eliminarRol(rol)"
+                    >
                       <svg class="roles-icon" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M3 6h18" />
                         <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
