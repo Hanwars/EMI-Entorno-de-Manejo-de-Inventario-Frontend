@@ -183,7 +183,13 @@
   "save": "Save role",
   "saving": "Saving...",
   "notAvailable": "The service to register roles is not available yet.",
-  "created": "The role {{name}} was registered successfully."
+  "created": "The role {{name}} was registered successfully.",
+  "editTitle": "Edit role",
+  "editDescription": "Change the name of the role {{name}}.",
+  "update": "Save changes",
+  "noChanges": "There are no changes to save.",
+  "updated": "The role {{name}} was updated successfully.",
+  "editNotAvailable": "The role was not found or the service to edit roles is not available yet."
 }
   },
   "common": {

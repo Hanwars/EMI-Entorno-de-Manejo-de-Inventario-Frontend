@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  OnInit,
   afterNextRender,
   inject,
   input,
@@ -12,7 +13,7 @@ import {
 import { FormsModule, NgForm } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TranslatePipe } from '@ngx-translate/core';
-import { finalize } from 'rxjs';
+import { Observable, finalize } from 'rxjs';
 import { Rol } from '../../models/rol';
 import { RoleService } from '../../services/role.service';
 
@@ -24,11 +25,14 @@ import { RoleService } from '../../services/role.service';
   styleUrl: './role-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RoleForm {
+export class RoleForm implements OnInit {
   private readonly roleService = inject(RoleService);
 
+  /* Rol a editar. Si es null, el formulario registra un rol nuevo. */
+  readonly rol = input<Rol | { role_id: number; nombre: string } | null>(null);
 
-  readonly rolesExistentes = input<{ nombre: string }[]>([]);
+ 
+  readonly rolesExistentes = input<{ role_id?: number; nombre: string }[]>([]);
 
  
   readonly guardado = output<Rol>();
@@ -49,7 +53,16 @@ export class RoleForm {
     afterNextRender(() => this.dialogo().nativeElement.showModal());
   }
 
-  
+  ngOnInit(): void {
+   
+    this.nombre = this.rol()?.nombre ?? '';
+  }
+
+  esEdicion(): boolean {
+    return this.rol() !== null;
+  }
+
+
   nombreNormalizado(): string {
     return this.nombre.trim().replace(/\s+/g, ' ');
   }
@@ -57,7 +70,17 @@ export class RoleForm {
 
   esDuplicado(): boolean {
     const nombre = this.nombreNormalizado().toLocaleLowerCase();
-    return nombre.length > 0 && this.rolesExistentes().some((r) => r.nombre.trim().toLocaleLowerCase() === nombre);
+    const idActual = this.rol()?.role_id;
+    return (
+      nombre.length > 0 &&
+      this.rolesExistentes().some(
+        (r) => r.role_id !== idActual && r.nombre.trim().toLocaleLowerCase() === nombre,
+      )
+    );
+  }
+
+  sinCambios(): boolean {
+    return this.esEdicion() && this.nombreNormalizado() === (this.rol()?.nombre ?? '').trim();
   }
 
   guardar(form: NgForm): void {
@@ -66,19 +89,28 @@ export class RoleForm {
       return;
     }
 
+
+    if (this.sinCambios()) {
+      this.cancelar();
+      return;
+    }
+
     this.errorClave.set(null);
     this.guardando.set(true);
 
-    this.roleService
-      .createRole(this.nombreNormalizado())
-      .pipe(finalize(() => this.guardando.set(false)))
-      .subscribe({
-        next: (rol) => {
-          this.cerrarDialogo();
-          this.guardado.emit(rol);
-        },
-        error: (err: HttpErrorResponse) => this.errorClave.set(this.claveError(err)),
-      });
+    const nombre = this.nombreNormalizado();
+    const rolActual = this.rol();
+    const peticion: Observable<Rol> = rolActual
+      ? this.roleService.updateRole(rolActual.role_id, nombre)
+      : this.roleService.createRole(nombre);
+
+    peticion.pipe(finalize(() => this.guardando.set(false))).subscribe({
+      next: (rol) => {
+        this.cerrarDialogo();
+        this.guardado.emit(rol);
+      },
+      error: (err: HttpErrorResponse) => this.errorClave.set(this.claveError(err)),
+    });
   }
 
   cancelar(): void {
@@ -89,7 +121,6 @@ export class RoleForm {
     this.cancelado.emit();
   }
 
- 
   alPresionarEscape(event: Event): void {
     event.preventDefault();
     this.cancelar();
@@ -107,8 +138,9 @@ export class RoleForm {
       case err.status === 0:
         return 'errors.network';
       case err.status === 404:
-       
-        return 'roles.form.notAvailable';
+        // Al registrar: el endpoint todavía no existe.
+        // Al editar: el rol ya no existe o el endpoint todavía no existe.
+        return this.esEdicion() ? 'roles.form.editNotAvailable' : 'roles.form.notAvailable';
       case err.status === 409:
         return 'roles.form.duplicate';
       case err.status === 400 || err.status === 422:

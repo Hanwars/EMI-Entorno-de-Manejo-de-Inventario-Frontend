@@ -183,7 +183,13 @@
   "save": "Guardar rol",
   "saving": "Guardando...",
   "notAvailable": "El servicio para registrar roles todavía no está disponible.",
-  "created": "El rol {{name}} se registró correctamente."
+  "created": "El rol {{name}} se registró correctamente.",
+  "editTitle": "Editar rol",
+  "editDescription": "Cambia el nombre del rol {{name}}.",
+  "update": "Guardar cambios",
+  "noChanges": "No hay cambios para guardar.",
+  "updated": "El rol {{name}} se actualizó correctamente.",
+  "editNotAvailable": "No se encontró el rol o el servicio para editar roles todavía no está disponible."
 }
   },
   "common": {

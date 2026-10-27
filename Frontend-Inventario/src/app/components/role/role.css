@@ -575,3 +575,20 @@
   font-size: 0.88rem;
   font-weight: 700;
 }
+
+/* Botón "Editar" activo en la tabla de roles */
+.roles-action:not(:disabled) {
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.roles-action:not(:disabled):hover {
+  border-color: var(--roles-primary);
+  background: var(--roles-primary-soft);
+  color: var(--roles-primary);
+}
+
+.roles-action:focus-visible {
+  outline: 2px solid var(--roles-primary);
+  outline-offset: 2px;
+}
