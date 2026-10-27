@@ -484,3 +484,27 @@
     transition: none;
   }
 }
+
+
+.users-primary {
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.users-primary:focus-visible {
+  outline: 2px solid var(--emi-primary-light, #4d91dc);
+  outline-offset: 3px;
+}
+
+
+.users-alert {
+  margin: 0 0 18px;
+  padding: 13px 16px;
+  border: 1px solid #bfe3cc;
+  border-radius: 12px;
+  background: #e3f3ea;
+  color: #2c7a50;
+  font-size: 0.88rem;
+  font-weight: 700;
+}

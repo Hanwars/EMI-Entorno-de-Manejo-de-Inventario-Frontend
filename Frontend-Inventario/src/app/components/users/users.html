@@ -5,13 +5,13 @@
       <h1 id="users-title">{{ 'users.title' | translate }}</h1>
       <p>{{ 'users.description' | translate }}</p>
     </div>
-    <a class="users-primary" routerLink="/register">
+    <button class="users-primary" type="button" (click)="abrirFormulario()">
       <svg class="users-icon" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M5 12h14" />
         <path d="M12 5v14" />
       </svg>
       {{ 'users.create' | translate }}
-    </a>
+    </button>
   </div>
 
   <div class="users-summary-grid">
@@ -42,6 +42,23 @@
       </div>
     </article>
   </div>
+
+  <!-- Mensaje de éxito al registrar un usuario -->
+  @if (usuarioRegistrado(); as nombre) {
+    <div class="users-alert" role="status">
+      {{ 'users.form.created' | translate: { name: nombre } }}
+    </div>
+  }
+
+  <!-- Formulario para registrar un usuario (ventana modal) -->
+  @if (formularioAbierto()) {
+    <app-user-form
+      [roles]="roles"
+      [correosExistentes]="correos"
+      (guardado)="alGuardarUsuario($event)"
+      (cancelado)="cerrarFormulario()"
+    />
+  }
 
   <section class="users-panel" aria-labelledby="users-list-title">
     <div class="users-panel__header">
@@ -84,7 +101,7 @@
                   <span class="users-avatar" aria-hidden="true">{{ initials(user.name) }}</span>
                   <span class="users-identity__copy">
                     <strong>{{ user.name }}</strong>
-                    <small>@{{ user.username }}</small>
+                    <small>&#64;{{ user.username }}</small>
                   </span>
                 </div>
               </td>

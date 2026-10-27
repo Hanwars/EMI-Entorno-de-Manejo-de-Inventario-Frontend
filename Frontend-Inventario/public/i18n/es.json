@@ -111,7 +111,32 @@
     "showing": "Mostrando {{visible}} de {{total}} usuarios de ejemplo",
     "pagination": "Paginación del listado de usuarios",
     "previous": "Página anterior",
-    "next": "Página siguiente"
+    "next": "Página siguiente",
+    
+      "form": {
+    "createTitle": "Registrar usuario",
+    "createDescription": "Crea una cuenta y asígnale un rol para darle acceso al sistema.",
+    "nameLabel": "Nombre completo",
+    "namePlaceholder": "Ej.: María Rodríguez",
+    "nameRequired": "El nombre es obligatorio.",
+    "nameMinLength": "El nombre debe tener al menos 3 caracteres.",
+    "namePattern": "Usa solo letras y espacios.",
+    "emailLabel": "Correo electrónico",
+    "emailRequired": "El correo electrónico es obligatorio.",
+    "emailDuplicate": "Ya existe un usuario con ese correo.",
+    "roleLabel": "Rol",
+    "rolePlaceholder": "Selecciona un rol",
+    "roleRequired": "Selecciona el rol del usuario.",
+    "passwordLabel": "Contraseña",
+    "passwordHint": "Entre 8 y 72 caracteres.",
+    "confirmLabel": "Confirmar contraseña",
+    "confirmRequired": "Confirma la contraseña.",
+    "confirmMismatch": "Las contraseñas no coinciden.",
+    "save": "Registrar usuario",
+    "saving": "Guardando...",
+    "notAvailable": "El servicio para registrar usuarios no está disponible.",
+    "created": "El usuario {{name}} se registró correctamente."
+    }
   },
   "inventory": {
     "title": "Inventario",

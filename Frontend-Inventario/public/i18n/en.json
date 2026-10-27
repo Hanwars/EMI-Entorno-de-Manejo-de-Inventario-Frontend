@@ -111,7 +111,32 @@
     "showing": "Showing {{visible}} of {{total}} sample users",
     "pagination": "User list pagination",
     "previous": "Previous page",
-    "next": "Next page"
+    "next": "Next page",
+
+       "form": {
+    "createTitle": "Register user",
+    "createDescription": "Create an account and assign a role to give access to the system.",
+    "nameLabel": "Full name",
+    "namePlaceholder": "E.g.: Maria Rodriguez",
+    "nameRequired": "The name is required.",
+    "nameMinLength": "The name must be at least 3 characters long.",
+    "namePattern": "Use only letters and spaces.",
+    "emailLabel": "Email address",
+    "emailRequired": "The email address is required.",
+    "emailDuplicate": "A user with that email already exists.",
+    "roleLabel": "Role",
+    "rolePlaceholder": "Select a role",
+    "roleRequired": "Select the user's role.",
+    "passwordLabel": "Password",
+    "passwordHint": "Between 8 and 72 characters.",
+    "confirmLabel": "Confirm password",
+    "confirmRequired": "Confirm the password.",
+    "confirmMismatch": "Passwords do not match.",
+    "save": "Register user",
+    "saving": "Saving...",
+    "notAvailable": "The service to register users is not available.",
+    "created": "The user {{name}} was registered successfully."
+    }
   },
   "inventory": {
     "title": "Inventory",

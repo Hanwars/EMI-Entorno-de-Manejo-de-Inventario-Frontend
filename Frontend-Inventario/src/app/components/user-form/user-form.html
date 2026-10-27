@@ -1,0 +1,220 @@
+<dialog
+  #dialogo
+  class="user-dialog"
+  aria-labelledby="user-form-title"
+  aria-describedby="user-form-description"
+  (cancel)="alPresionarEscape($event)"
+>
+  <form class="user-form" #userForm="ngForm" (ngSubmit)="guardar(userForm)" [attr.aria-busy]="guardando()" novalidate>
+    <header class="user-form__header">
+      <div class="user-form__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <circle cx="10" cy="8" r="4" />
+          <path d="M3 20c.8-4 3.2-6 7-6 1.5 0 2.8.3 3.9.9" />
+          <path d="M18 14v6M15 17h6" />
+        </svg>
+      </div>
+      <div class="user-form__titles">
+        <h2 id="user-form-title">{{ 'users.form.createTitle' | translate }}</h2>
+        <p id="user-form-description">{{ 'users.form.createDescription' | translate }}</p>
+      </div>
+      <button
+        type="button"
+        class="user-form__close"
+        (click)="cancelar()"
+        [disabled]="guardando()"
+        [attr.aria-label]="'common.close' | translate"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M18 6 6 18M6 6l12 12" />
+        </svg>
+      </button>
+    </header>
+
+    @if (errorClave(); as clave) {
+      <div class="user-form__alert" role="alert">{{ clave | translate }}</div>
+    }
+
+    <div class="user-form__body">
+      <!-- Nombre -->
+      @let nombreTocado = nombreCtrl.touched || userForm.submitted;
+      <div class="user-form__field">
+        <label class="user-form__label" for="usuario-nombre">{{ 'users.form.nameLabel' | translate }}</label>
+        <input
+          id="usuario-nombre"
+          name="nombre"
+          type="text"
+          class="user-form__input"
+          [(ngModel)]="nombre"
+          (ngModelChange)="limpiarError()"
+          #nombreCtrl="ngModel"
+          required
+          minlength="3"
+          maxlength="100"
+          pattern="^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' ]+$"
+          autocomplete="off"
+          autofocus
+          [placeholder]="'users.form.namePlaceholder' | translate"
+          [attr.aria-invalid]="nombreTocado && nombreCtrl.invalid"
+          [attr.aria-describedby]="nombreTocado && nombreCtrl.invalid ? 'usuario-nombre-error' : null"
+        />
+        @if (nombreTocado) {
+          @if (nombreCtrl.hasError('required')) {
+            <p class="user-form__error" id="usuario-nombre-error">{{ 'users.form.nameRequired' | translate }}</p>
+          } @else if (nombreCtrl.hasError('minlength')) {
+            <p class="user-form__error" id="usuario-nombre-error">{{ 'users.form.nameMinLength' | translate }}</p>
+          } @else if (nombreCtrl.hasError('pattern')) {
+            <p class="user-form__error" id="usuario-nombre-error">{{ 'users.form.namePattern' | translate }}</p>
+          }
+        }
+      </div>
+
+      <!-- Correo -->
+      @let emailTocado = emailCtrl.touched || userForm.submitted;
+      @let emailConError = emailTocado && (emailCtrl.invalid || correoDuplicado());
+      <div class="user-form__field">
+        <label class="user-form__label" for="usuario-email">{{ 'users.form.emailLabel' | translate }}</label>
+        <input
+          id="usuario-email"
+          name="email"
+          type="email"
+          class="user-form__input"
+          [(ngModel)]="email"
+          (ngModelChange)="limpiarError()"
+          #emailCtrl="ngModel"
+          required
+          email
+          maxlength="150"
+          autocomplete="off"
+          [placeholder]="'auth.emailPlaceholder' | translate"
+          [attr.aria-invalid]="emailConError"
+          [attr.aria-describedby]="emailConError ? 'usuario-email-error' : null"
+        />
+        @if (emailTocado) {
+          @if (emailCtrl.hasError('required')) {
+            <p class="user-form__error" id="usuario-email-error">{{ 'users.form.emailRequired' | translate }}</p>
+          } @else if (emailCtrl.hasError('email')) {
+            <p class="user-form__error" id="usuario-email-error">{{ 'auth.emailInvalid' | translate }}</p>
+          } @else if (correoDuplicado()) {
+            <p class="user-form__error" id="usuario-email-error">{{ 'users.form.emailDuplicate' | translate }}</p>
+          }
+        }
+      </div>
+
+      <!-- Rol -->
+      @let rolTocado = rolCtrl.touched || userForm.submitted;
+      <div class="user-form__field">
+        <label class="user-form__label" for="usuario-rol">{{ 'users.form.roleLabel' | translate }}</label>
+        <select
+          id="usuario-rol"
+          name="rol"
+          class="user-form__input user-form__select"
+          [(ngModel)]="rolId"
+          (ngModelChange)="limpiarError()"
+          #rolCtrl="ngModel"
+          required
+          [attr.aria-invalid]="rolTocado && rolCtrl.invalid"
+          [attr.aria-describedby]="rolTocado && rolCtrl.invalid ? 'usuario-rol-error' : null"
+        >
+          <option [ngValue]="null" disabled>{{ 'users.form.rolePlaceholder' | translate }}</option>
+          @for (rol of roles(); track rol.role_id) {
+            <option [ngValue]="rol.role_id">{{ rol.nombre }}</option>
+          }
+        </select>
+        @if (rolTocado && rolCtrl.hasError('required')) {
+          <p class="user-form__error" id="usuario-rol-error">{{ 'users.form.roleRequired' | translate }}</p>
+        }
+      </div>
+
+      <!-- Contraseña -->
+      @let contrasenaTocada = contrasenaCtrl.touched || userForm.submitted;
+      @let contrasenaConError = contrasenaTocada && (contrasenaCtrl.invalid || contrasenaMuyLarga());
+      <div class="user-form__field">
+        <label class="user-form__label" for="usuario-contrasena">{{ 'users.form.passwordLabel' | translate }}</label>
+        <div class="user-form__password">
+          <input
+            id="usuario-contrasena"
+            name="contrasena"
+            [type]="mostrarContrasena ? 'text' : 'password'"
+            class="user-form__input"
+            [(ngModel)]="contrasena"
+            (ngModelChange)="limpiarError()"
+            #contrasenaCtrl="ngModel"
+            required
+            [minlength]="minContrasena"
+            autocomplete="new-password"
+            [placeholder]="'auth.passwordPlaceholder' | translate"
+            [attr.aria-invalid]="contrasenaConError"
+            [attr.aria-describedby]="contrasenaConError ? 'usuario-contrasena-error usuario-contrasena-hint' : 'usuario-contrasena-hint'"
+          />
+          <button
+            type="button"
+            class="user-form__toggle"
+            (click)="mostrarContrasena = !mostrarContrasena"
+            [attr.aria-pressed]="mostrarContrasena"
+            [attr.aria-label]="(mostrarContrasena ? 'auth.hidePassword' : 'auth.showPassword') | translate"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M2.5 12s3.4-5.2 9.5-5.2 9.5 5.2 9.5 5.2-3.4 5.2-9.5 5.2S2.5 12 2.5 12Z" />
+              <circle cx="12" cy="12" r="2.4" />
+              @if (!mostrarContrasena) {
+                <path d="m4 4 16 16" />
+              }
+            </svg>
+          </button>
+        </div>
+        <p class="user-form__hint" id="usuario-contrasena-hint">{{ 'users.form.passwordHint' | translate }}</p>
+        @if (contrasenaTocada) {
+          @if (contrasenaCtrl.hasError('required')) {
+            <p class="user-form__error" id="usuario-contrasena-error">{{ 'validation.passwordRequired' | translate }}</p>
+          } @else if (contrasenaCtrl.hasError('minlength')) {
+            <p class="user-form__error" id="usuario-contrasena-error">{{ 'validation.passwordMinLength' | translate }}</p>
+          } @else if (contrasenaMuyLarga()) {
+            <p class="user-form__error" id="usuario-contrasena-error">{{ 'validation.passwordMaxLength' | translate }}</p>
+          }
+        }
+      </div>
+
+      <!-- Confirmar contraseña -->
+      @let confirmacionTocada = confirmacionCtrl.touched || userForm.submitted;
+      @let confirmacionConError = confirmacionTocada && (confirmacionCtrl.invalid || contrasenasDistintas());
+      <div class="user-form__field">
+        <label class="user-form__label" for="usuario-confirmacion">{{ 'users.form.confirmLabel' | translate }}</label>
+        <input
+          id="usuario-confirmacion"
+          name="confirmacion"
+          [type]="mostrarContrasena ? 'text' : 'password'"
+          class="user-form__input"
+          [(ngModel)]="confirmacion"
+          (ngModelChange)="limpiarError()"
+          #confirmacionCtrl="ngModel"
+          required
+          autocomplete="new-password"
+          [attr.aria-invalid]="confirmacionConError"
+          [attr.aria-describedby]="confirmacionConError ? 'usuario-confirmacion-error' : null"
+        />
+        @if (confirmacionTocada) {
+          @if (confirmacionCtrl.hasError('required')) {
+            <p class="user-form__error" id="usuario-confirmacion-error">{{ 'users.form.confirmRequired' | translate }}</p>
+          } @else if (contrasenasDistintas()) {
+            <p class="user-form__error" id="usuario-confirmacion-error">{{ 'users.form.confirmMismatch' | translate }}</p>
+          }
+        }
+      </div>
+    </div>
+
+    <footer class="user-form__footer">
+      <button type="button" class="user-form__secondary" (click)="cancelar()" [disabled]="guardando()">
+        {{ 'common.cancel' | translate }}
+      </button>
+      <button type="submit" class="user-form__primary" [disabled]="guardando()">
+        @if (guardando()) {
+          <span class="user-form__spinner" aria-hidden="true"></span>
+          {{ 'users.form.saving' | translate }}
+        } @else {
+          {{ 'users.form.save' | translate }}
+        }
+      </button>
+    </footer>
+  </form>
+</dialog>
