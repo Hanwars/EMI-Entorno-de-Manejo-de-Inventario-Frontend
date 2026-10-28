@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { OpcionRol, UserForm, UsuarioCreado } from '../user-form/user-form';
 
@@ -56,11 +62,16 @@ export class Users {
   users: UserRecord[] = [...EXAMPLE_USERS];
   readonly roles = EXAMPLE_ROLES;
 
- 
+  private readonly dialogoEliminacion =
+    viewChild.required<ElementRef<HTMLDialogElement>>('dialogoEliminacion');
+
   readonly formularioAbierto = signal(false);
 
-
   readonly usuarioRegistrado = signal<string | null>(null);
+
+  readonly usuarioEliminado = signal<string | null>(null);
+
+  readonly usuarioPorEliminar = signal<UserRecord | null>(null);
 
   get activeUsers(): number {
     return this.users.filter((user) => user.active).length;
@@ -81,6 +92,7 @@ export class Users {
 
   abrirFormulario(): void {
     this.usuarioRegistrado.set(null);
+    this.usuarioEliminado.set(null);
     this.formularioAbierto.set(true);
   }
 
@@ -90,7 +102,13 @@ export class Users {
 
   alGuardarUsuario(usuario: UsuarioCreado): void {
     const rol = this.roles.find((r) => r.role_id === usuario.rol_id);
-    const numero = usuario.usuario_id || this.users.length + 1;
+    const siguienteNumero =
+      Math.max(0, ...this.users.map((user) => Number(user.id.replace(/^USR-/, '')) || 0)) + 1;
+    const numeroSolicitado = usuario.usuario_id || siguienteNumero;
+    const idSolicitado = `USR-${String(numeroSolicitado).padStart(3, '0')}`;
+    const numero = this.users.some((user) => user.id === idSolicitado)
+      ? siguienteNumero
+      : numeroSolicitado;
 
     this.users = [
       ...this.users,
@@ -106,5 +124,33 @@ export class Users {
 
     this.formularioAbierto.set(false);
     this.usuarioRegistrado.set(usuario.nombre);
+    this.usuarioEliminado.set(null);
+  }
+
+  solicitarEliminacion(usuario: UserRecord): void {
+    this.usuarioPorEliminar.set(usuario);
+    this.dialogoEliminacion().nativeElement.showModal();
+  }
+
+  cancelarEliminacion(event?: Event): void {
+    event?.preventDefault();
+    const dialogo = this.dialogoEliminacion().nativeElement;
+    if (dialogo.open) {
+      dialogo.close();
+    }
+    this.usuarioPorEliminar.set(null);
+  }
+
+  confirmarEliminacion(): void {
+    const usuario = this.usuarioPorEliminar();
+    if (!usuario) {
+      return;
+    }
+
+    this.users = this.users.filter((user) => user.id !== usuario.id);
+    this.usuarioRegistrado.set(null);
+    this.usuarioEliminado.set(usuario.name);
+    this.usuarioPorEliminar.set(null);
+    this.dialogoEliminacion().nativeElement.close();
   }
 }

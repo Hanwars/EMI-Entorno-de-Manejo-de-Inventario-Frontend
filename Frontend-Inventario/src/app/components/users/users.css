@@ -83,14 +83,10 @@
 }
 
 .users-icon {
+  display: inline-block;
   width: 1.1em;
-  height: 1.1em;
   flex-shrink: 0;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  text-align: center;
 }
 
 .users-summary-grid {
@@ -387,8 +383,116 @@
   cursor: default;
 }
 
+.users-actions button:not(:disabled) {
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.users-actions button:not(:disabled):hover {
+  background: #f3f5f7;
+}
+
+.users-actions button:focus-visible {
+  outline: 2px solid var(--users-primary);
+  outline-offset: 2px;
+}
+
 .users-actions__delete {
-  color: #3b444d !important;
+  color: #b42318 !important;
+}
+
+.users-actions__delete:not(:disabled):hover {
+  border-color: #f1b8b2;
+  background: #fff1f0;
+}
+
+.users-empty {
+  padding: 38px 22px !important;
+  color: var(--users-muted) !important;
+  text-align: center;
+}
+
+.users-delete-dialog {
+  width: min(100% - 32px, 440px);
+  padding: 0;
+  border: 1px solid var(--users-border);
+  border-radius: 16px;
+  background: #fff;
+  color: var(--users-text);
+  box-shadow: 0 24px 64px rgb(17 24 32 / 0.24);
+}
+
+.users-delete-dialog::backdrop {
+  background: rgb(17 24 32 / 0.56);
+  backdrop-filter: blur(2px);
+}
+
+.users-delete-dialog__content {
+  padding: 26px;
+}
+
+.users-delete-dialog__icon {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  margin-bottom: 18px;
+  border-radius: 12px;
+  background: #fff1f0;
+  color: #b42318;
+}
+
+.users-delete-dialog__icon .users-icon {
+  font-size: 23px;
+}
+
+.users-delete-dialog h2 {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.users-delete-dialog p {
+  margin: 0;
+  color: var(--users-muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.users-delete-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.users-delete-dialog__actions button {
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--users-border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--users-text);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.users-delete-dialog__actions button:focus-visible {
+  outline: 2px solid var(--users-primary);
+  outline-offset: 2px;
+}
+
+.users-delete-dialog__actions .users-delete-dialog__confirm {
+  border-color: #b42318;
+  background: #b42318;
+  color: #fff;
+}
+
+.users-delete-dialog__actions .users-delete-dialog__confirm:hover {
+  border-color: #912018;
+  background: #912018;
 }
 
 .users-panel__footer {

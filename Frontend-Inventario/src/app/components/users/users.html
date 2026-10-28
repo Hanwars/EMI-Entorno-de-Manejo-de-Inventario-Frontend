@@ -6,10 +6,7 @@
       <p>{{ 'users.description' | translate }}</p>
     </div>
     <button class="users-primary" type="button" (click)="abrirFormulario()">
-      <svg class="users-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M5 12h14" />
-        <path d="M12 5v14" />
-      </svg>
+      <i class="users-icon fa-solid fa-plus" aria-hidden="true"></i>
       {{ 'users.create' | translate }}
     </button>
   </div>
@@ -17,11 +14,7 @@
   <div class="users-summary-grid">
     <article class="users-summary">
       <span class="users-summary__icon" aria-hidden="true">
-        <svg class="users-icon" viewBox="0 0 24 24">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-          <circle cx="10" cy="7" r="4" />
-          <path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-        </svg>
+        <i class="users-icon fa-solid fa-users" aria-hidden="true"></i>
       </span>
       <div>
         <span class="users-summary__label">{{ 'users.registered' | translate }}</span>
@@ -31,10 +24,7 @@
 
     <article class="users-summary">
       <span class="users-summary__icon users-summary__icon--active" aria-hidden="true">
-        <svg class="users-icon" viewBox="0 0 24 24">
-          <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z" />
-          <path d="m9 12 2 2 4-4" />
-        </svg>
+        <i class="users-icon fa-solid fa-shield-halved" aria-hidden="true"></i>
       </span>
       <div>
         <span class="users-summary__label">{{ 'users.activeAccounts' | translate }}</span>
@@ -47,6 +37,11 @@
   @if (usuarioRegistrado(); as nombre) {
     <div class="users-alert" role="status">
       {{ 'users.form.created' | translate: { name: nombre } }}
+    </div>
+  }
+  @if (usuarioEliminado(); as nombre) {
+    <div class="users-alert" role="status">
+      {{ 'users.deleted' | translate: { name: nombre } }}
     </div>
   }
 
@@ -67,10 +62,7 @@
         <p>{{ 'users.listDescription' | translate }}</p>
       </div>
       <label class="users-search">
-        <svg class="users-icon users-search__icon" viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.3-4.3" />
-        </svg>
+        <i class="users-icon users-search__icon fa-solid fa-magnifying-glass" aria-hidden="true"></i>
         <span class="visually-hidden">{{ 'users.search' | translate }}</span>
         <input
           type="search"
@@ -93,47 +85,49 @@
           </tr>
         </thead>
         <tbody>
-          @for (user of users; track user.id) {
+          @if (users.length === 0) {
             <tr>
-              <td><span class="users-id">{{ user.id }}</span></td>
-              <td>
-                <div class="users-identity">
-                  <span class="users-avatar" aria-hidden="true">{{ initials(user.name) }}</span>
-                  <span class="users-identity__copy">
-                    <strong>{{ user.name }}</strong>
-                    <small>&#64;{{ user.username }}</small>
-                  </span>
-                </div>
-              </td>
-              <td><span class="users-email">{{ user.email }}</span></td>
-              <td><span class="users-role">{{ user.role }}</span></td>
-              <td>
-                <span class="users-status" [class.users-status--inactive]="!user.active">
-                  {{ (user.active ? 'users.statusActive' : 'users.statusInactive') | translate }}
-                </span>
-              </td>
-              <td>
-                <div class="users-actions">
-                  <button type="button" disabled [attr.aria-label]="('users.edit' | translate) + ' ' + user.name">
-                    <svg class="users-icon" viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
-                      <path d="m15 5 4 4" />
-                    </svg>
-                    <span>{{ 'users.edit' | translate }}</span>
-                  </button>
-                  <button class="users-actions__delete" type="button" disabled [attr.aria-label]="('users.delete' | translate) + ' ' + user.name">
-                    <svg class="users-icon" viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M3 6h18" />
-                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                      <path d="M10 11v6" />
-                      <path d="M14 11v6" />
-                    </svg>
-                    <span>{{ 'users.delete' | translate }}</span>
-                  </button>
-                </div>
-              </td>
+              <td class="users-empty" colspan="6">{{ 'users.empty' | translate }}</td>
             </tr>
+          } @else {
+            @for (user of users; track user.id) {
+              <tr>
+                <td><span class="users-id">{{ user.id }}</span></td>
+                <td>
+                  <div class="users-identity">
+                    <span class="users-avatar" aria-hidden="true">{{ initials(user.name) }}</span>
+                    <span class="users-identity__copy">
+                      <strong>{{ user.name }}</strong>
+                      <small>&#64;{{ user.username }}</small>
+                    </span>
+                  </div>
+                </td>
+                <td><span class="users-email">{{ user.email }}</span></td>
+                <td><span class="users-role">{{ user.role }}</span></td>
+                <td>
+                  <span class="users-status" [class.users-status--inactive]="!user.active">
+                    {{ (user.active ? 'users.statusActive' : 'users.statusInactive') | translate }}
+                  </span>
+                </td>
+                <td>
+                  <div class="users-actions">
+                    <button type="button" disabled [attr.aria-label]="('users.edit' | translate) + ' ' + user.name">
+                      <i class="users-icon fa-solid fa-pen-to-square" aria-hidden="true"></i>
+                      <span>{{ 'users.edit' | translate }}</span>
+                    </button>
+                    <button
+                      class="users-actions__delete"
+                      type="button"
+                      [attr.aria-label]="('users.delete' | translate) + ' ' + user.name"
+                      (click)="solicitarEliminacion(user)"
+                    >
+                      <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+                      <span>{{ 'users.delete' | translate }}</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
           }
         </tbody>
       </table>
@@ -149,4 +143,32 @@
       </div>
     </div>
   </section>
+
+  <dialog
+    #dialogoEliminacion
+    class="users-delete-dialog"
+    aria-labelledby="users-delete-title"
+    aria-describedby="users-delete-description"
+    (cancel)="cancelarEliminacion($event)"
+  >
+    <div class="users-delete-dialog__content">
+      <span class="users-delete-dialog__icon" aria-hidden="true">
+        <i class="users-icon fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+      </span>
+      <h2 id="users-delete-title">{{ 'users.delete' | translate }}</h2>
+      <p id="users-delete-description">
+        {{ 'users.deleteConfirm' | translate }}
+        <strong>{{ usuarioPorEliminar()?.name }}</strong>?
+        {{ 'users.deleteConfirmWarning' | translate }}
+      </p>
+      <div class="users-delete-dialog__actions">
+        <button type="button" class="users-delete-dialog__cancel" (click)="cancelarEliminacion()">
+          {{ 'common.cancel' | translate }}
+        </button>
+        <button type="button" class="users-delete-dialog__confirm" (click)="confirmarEliminacion()">
+          {{ 'common.confirm' | translate }}
+        </button>
+      </div>
+    </div>
+  </dialog>
 </section>
