@@ -2,54 +2,18 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  computed,
+  inject,
   signal,
   viewChild,
 } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { TranslatePipe } from '@ngx-translate/core';
+import { finalize } from 'rxjs';
 import { OpcionRol, UserForm, UsuarioCreado } from '../user-form/user-form';
-
-interface UserRecord {
-  id: string;
-  name: string;
-  username: string;
-  email: string;
-  role: string;
-  active: boolean;
-}
-
-const EXAMPLE_USERS: UserRecord[] = [
-  {
-    id: 'USR-001',
-    name: 'Eddier',
-    username: 'eddier',
-    email: 'eddier@example.com',
-    role: 'Administrador',
-    active: true,
-  },
-  {
-    id: 'USR-002',
-    name: 'Handy',
-    username: 'handy',
-    email: 'handy@example.com',
-    role: 'Encargado de inventario',
-    active: true,
-  },
-  {
-    id: 'USR-003',
-    name: 'Anthony',
-    username: 'anthony',
-    email: 'anthony@example.com',
-    role: 'Consulta',
-    active: false,
-  },
-];
-
-
-const EXAMPLE_ROLES: OpcionRol[] = [
-  { role_id: 1, nombre: 'Administrador' },
-  { role_id: 2, nombre: 'Encargado de inventario' },
-  { role_id: 3, nombre: 'Consulta' },
-];
+import { UserService, UsuarioApi } from '../../services/user.service';
+import { RoleService } from '../../services/role.service';
+import { MensajeService } from '../../services/mensaje.service';
 
 @Component({
   selector: 'app-users',
@@ -59,8 +23,24 @@ const EXAMPLE_ROLES: OpcionRol[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Users {
-  users: UserRecord[] = [...EXAMPLE_USERS];
-  readonly roles = EXAMPLE_ROLES;
+  private readonly userService = inject(UserService);
+  private readonly roleService = inject(RoleService);
+  private readonly mensajes = inject(MensajeService);
+
+  /** Usuarios obtenidos del backend. */
+  readonly users = signal<UsuarioApi[]>([]);
+
+  /** Roles obtenidos del backend, para mostrar su nombre y elegirlos en el formulario. */
+  readonly roles = signal<OpcionRol[]>([]);
+
+  /** true mientras se carga el listado. */
+  readonly cargando = signal(true);
+
+  /** Clave de traducción del error devuelto al cargar el listado; null si no hay error. */
+  readonly errorCarga = signal<string | null>(null);
+
+  /** true mientras se procesa una eliminación. */
+  readonly eliminando = signal(false);
 
   private readonly dialogoEliminacion =
     viewChild.required<ElementRef<HTMLDialogElement>>('dialogoEliminacion');
@@ -71,15 +51,50 @@ export class Users {
 
   readonly usuarioEliminado = signal<string | null>(null);
 
-  readonly usuarioPorEliminar = signal<UserRecord | null>(null);
+  readonly usuarioPorEliminar = signal<UsuarioApi | null>(null);
 
-  get activeUsers(): number {
-    return this.users.filter((user) => user.active).length;
+  /** Correos ya registrados, para que el formulario avise de duplicados antes de enviar. */
+  readonly correos = computed(() =>
+    this.users()
+      .map((user) => user.email)
+      .filter((email): email is string => !!email),
+  );
+
+  constructor() {
+    this.cargarUsuarios();
+    this.cargarRoles();
   }
 
+  cargarUsuarios(): void {
+    this.cargando.set(true);
+    this.errorCarga.set(null);
 
-  get correos(): string[] {
-    return this.users.map((user) => user.email);
+    this.userService
+      .getAllUsers()
+      .pipe(finalize(() => this.cargando.set(false)))
+      .subscribe({
+        next: (usuarios) => this.users.set(usuarios ?? []),
+        error: (err: HttpErrorResponse) => this.errorCarga.set(this.mensajes.claveErrorHttp(err)),
+      });
+  }
+
+  private cargarRoles(): void {
+    this.roleService.getRoles().subscribe({
+      next: (roles) =>
+        this.roles.set((roles ?? []).map((rol) => ({ role_id: rol.role_id, nombre: rol.nombre }))),
+      // Si los roles no se pueden obtener, la lista muestra el número de rol.
+      error: () => this.roles.set([]),
+    });
+  }
+
+  /** Identificador con el formato visual de la tabla, por ejemplo USR-007. */
+  formatoId(id: number): string {
+    return `USR-${String(id).padStart(3, '0')}`;
+  }
+
+  /** Nombre del rol; si los roles no están disponibles, su número. */
+  nombreRol(rolId: number): string {
+    return this.roles().find((rol) => rol.role_id === rolId)?.nombre ?? String(rolId);
   }
 
   initials(name: string): string {
@@ -101,56 +116,63 @@ export class Users {
   }
 
   alGuardarUsuario(usuario: UsuarioCreado): void {
-    const rol = this.roles.find((r) => r.role_id === usuario.rol_id);
-    const siguienteNumero =
-      Math.max(0, ...this.users.map((user) => Number(user.id.replace(/^USR-/, '')) || 0)) + 1;
-    const numeroSolicitado = usuario.usuario_id || siguienteNumero;
-    const idSolicitado = `USR-${String(numeroSolicitado).padStart(3, '0')}`;
-    const numero = this.users.some((user) => user.id === idSolicitado)
-      ? siguienteNumero
-      : numeroSolicitado;
-
-    this.users = [
-      ...this.users,
-      {
-        id: `USR-${String(numero).padStart(3, '0')}`,
-        name: usuario.nombre,
-        username: usuario.email.split('@')[0],
-        email: usuario.email,
-        role: rol?.nombre ?? '',
-        active: true,
-      },
-    ];
-
     this.formularioAbierto.set(false);
     this.usuarioRegistrado.set(usuario.nombre);
     this.usuarioEliminado.set(null);
+
+    // Se recarga desde el backend para mostrar los datos tal como quedaron guardados.
+    this.cargarUsuarios();
   }
 
-  solicitarEliminacion(usuario: UserRecord): void {
+  solicitarEliminacion(usuario: UsuarioApi): void {
     this.usuarioPorEliminar.set(usuario);
     this.dialogoEliminacion().nativeElement.showModal();
   }
 
   cancelarEliminacion(event?: Event): void {
     event?.preventDefault();
+    if (this.eliminando()) {
+      return;
+    }
+    this.cerrarDialogoEliminacion();
+  }
+
+  confirmarEliminacion(): void {
+    const usuario = this.usuarioPorEliminar();
+    if (!usuario || this.eliminando()) {
+      return;
+    }
+
+    this.eliminando.set(true);
+
+    this.userService
+      .deleteUser(usuario.usuarioId)
+      .pipe(finalize(() => this.eliminando.set(false)))
+      .subscribe({
+        next: () => {
+          this.users.update((users) => users.filter((user) => user.usuarioId !== usuario.usuarioId));
+          this.usuarioRegistrado.set(null);
+          this.usuarioEliminado.set(usuario.nombre);
+          this.cerrarDialogoEliminacion();
+        },
+        error: (err: HttpErrorResponse) => {
+          this.cerrarDialogoEliminacion();
+          // El error del backend se muestra con el servicio de mensajes del proyecto.
+          this.mensajes.mostrarErrorHttp(err);
+
+          // Si el usuario ya no existe, se actualiza el listado para reflejarlo.
+          if (err.status === 404) {
+            this.cargarUsuarios();
+          }
+        },
+      });
+  }
+
+  private cerrarDialogoEliminacion(): void {
     const dialogo = this.dialogoEliminacion().nativeElement;
     if (dialogo.open) {
       dialogo.close();
     }
     this.usuarioPorEliminar.set(null);
-  }
-
-  confirmarEliminacion(): void {
-    const usuario = this.usuarioPorEliminar();
-    if (!usuario) {
-      return;
-    }
-
-    this.users = this.users.filter((user) => user.id !== usuario.id);
-    this.usuarioRegistrado.set(null);
-    this.usuarioEliminado.set(usuario.name);
-    this.usuarioPorEliminar.set(null);
-    this.dialogoEliminacion().nativeElement.close();
   }
 }

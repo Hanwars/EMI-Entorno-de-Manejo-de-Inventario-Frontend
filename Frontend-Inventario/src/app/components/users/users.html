@@ -18,17 +18,7 @@
       </span>
       <div>
         <span class="users-summary__label">{{ 'users.registered' | translate }}</span>
-        <strong>{{ users.length }}</strong>
-      </div>
-    </article>
-
-    <article class="users-summary">
-      <span class="users-summary__icon users-summary__icon--active" aria-hidden="true">
-        <i class="users-icon fa-solid fa-shield-halved" aria-hidden="true"></i>
-      </span>
-      <div>
-        <span class="users-summary__label">{{ 'users.activeAccounts' | translate }}</span>
-        <strong>{{ activeUsers }}</strong>
+        <strong>{{ users().length }}</strong>
       </div>
     </article>
   </div>
@@ -48,8 +38,8 @@
   <!-- Formulario para registrar un usuario (ventana modal) -->
   @if (formularioAbierto()) {
     <app-user-form
-      [roles]="roles"
-      [correosExistentes]="correos"
+      [roles]="roles()"
+      [correosExistentes]="correos()"
       (guardado)="alGuardarUsuario($event)"
       (cancelado)="cerrarFormulario()"
     />
@@ -80,45 +70,46 @@
             <th scope="col">{{ 'users.user' | translate }}</th>
             <th scope="col">{{ 'users.email' | translate }}</th>
             <th scope="col">{{ 'users.role' | translate }}</th>
-            <th scope="col">{{ 'users.status' | translate }}</th>
             <th scope="col" class="users-table__actions-heading">{{ 'users.actions' | translate }}</th>
           </tr>
         </thead>
         <tbody>
-          @if (users.length === 0) {
+          @if (cargando()) {
             <tr>
-              <td class="users-empty" colspan="6">{{ 'users.empty' | translate }}</td>
+              <td class="users-empty" colspan="5" role="status">{{ 'app.loading' | translate }}</td>
+            </tr>
+          } @else if (errorCarga(); as clave) {
+            <tr>
+              <td class="users-empty" colspan="5" role="alert">{{ clave | translate }}</td>
+            </tr>
+          } @else if (users().length === 0) {
+            <tr>
+              <td class="users-empty" colspan="5">{{ 'users.empty' | translate }}</td>
             </tr>
           } @else {
-            @for (user of users; track user.id) {
+            @for (user of users(); track user.usuarioId) {
               <tr>
-                <td><span class="users-id">{{ user.id }}</span></td>
+                <td><span class="users-id">{{ formatoId(user.usuarioId) }}</span></td>
                 <td>
                   <div class="users-identity">
-                    <span class="users-avatar" aria-hidden="true">{{ initials(user.name) }}</span>
+                    <span class="users-avatar" aria-hidden="true">{{ initials(user.nombre) }}</span>
                     <span class="users-identity__copy">
-                      <strong>{{ user.name }}</strong>
-                      <small>&#64;{{ user.username }}</small>
+                      <strong>{{ user.nombre }}</strong>
                     </span>
                   </div>
                 </td>
-                <td><span class="users-email">{{ user.email }}</span></td>
-                <td><span class="users-role">{{ user.role }}</span></td>
-                <td>
-                  <span class="users-status" [class.users-status--inactive]="!user.active">
-                    {{ (user.active ? 'users.statusActive' : 'users.statusInactive') | translate }}
-                  </span>
-                </td>
+                <td><span class="users-email">{{ user.email ?? '—' }}</span></td>
+                <td><span class="users-role">{{ nombreRol(user.rolId) }}</span></td>
                 <td>
                   <div class="users-actions">
-                    <button type="button" disabled [attr.aria-label]="('users.edit' | translate) + ' ' + user.name">
+                    <button type="button" disabled [attr.aria-label]="('users.edit' | translate) + ' ' + user.nombre">
                       <i class="users-icon fa-solid fa-pen-to-square" aria-hidden="true"></i>
                       <span>{{ 'users.edit' | translate }}</span>
                     </button>
                     <button
                       class="users-actions__delete"
                       type="button"
-                      [attr.aria-label]="('users.delete' | translate) + ' ' + user.name"
+                      [attr.aria-label]="('users.delete' | translate) + ' ' + user.nombre"
                       (click)="solicitarEliminacion(user)"
                     >
                       <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
@@ -134,7 +125,7 @@
     </div>
     <div class="users-panel__footer">
       <span>
-        {{ 'users.showing' | translate: { visible: users.length, total: users.length } }}
+        {{ 'users.showing' | translate: { visible: users().length, total: users().length } }}
       </span>
       <div class="users-pagination" [attr.aria-label]="'users.pagination' | translate">
         <button type="button" disabled [attr.aria-label]="'users.previous' | translate">‹</button>
@@ -158,14 +149,14 @@
       <h2 id="users-delete-title">{{ 'users.delete' | translate }}</h2>
       <p id="users-delete-description">
         {{ 'users.deleteConfirm' | translate }}
-        <strong>{{ usuarioPorEliminar()?.name }}</strong>?
+        <strong>{{ usuarioPorEliminar()?.nombre }}</strong>?
         {{ 'users.deleteConfirmWarning' | translate }}
       </p>
       <div class="users-delete-dialog__actions">
-        <button type="button" class="users-delete-dialog__cancel" (click)="cancelarEliminacion()">
+        <button type="button" class="users-delete-dialog__cancel" [disabled]="eliminando()" (click)="cancelarEliminacion()">
           {{ 'common.cancel' | translate }}
         </button>
-        <button type="button" class="users-delete-dialog__confirm" (click)="confirmarEliminacion()">
+        <button type="button" class="users-delete-dialog__confirm" [disabled]="eliminando()" (click)="confirmarEliminacion()">
           {{ 'common.confirm' | translate }}
         </button>
       </div>
