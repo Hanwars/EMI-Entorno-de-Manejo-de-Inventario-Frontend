@@ -8,15 +8,30 @@
   <form class="user-form" #userForm="ngForm" (ngSubmit)="guardar(userForm)" [attr.aria-busy]="guardando()" novalidate>
     <header class="user-form__header">
       <div class="user-form__icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24">
-          <circle cx="10" cy="8" r="4" />
-          <path d="M3 20c.8-4 3.2-6 7-6 1.5 0 2.8.3 3.9.9" />
-          <path d="M18 14v6M15 17h6" />
-        </svg>
+        @if (esEdicion()) {
+          <svg viewBox="0 0 24 24">
+            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
+            <path d="m15 5 4 4" />
+          </svg>
+        } @else {
+          <svg viewBox="0 0 24 24">
+            <circle cx="10" cy="8" r="4" />
+            <path d="M3 20c.8-4 3.2-6 7-6 1.5 0 2.8.3 3.9.9" />
+            <path d="M18 14v6M15 17h6" />
+          </svg>
+        }
       </div>
       <div class="user-form__titles">
-        <h2 id="user-form-title">{{ 'users.form.createTitle' | translate }}</h2>
-        <p id="user-form-description">{{ 'users.form.createDescription' | translate }}</p>
+        <h2 id="user-form-title">
+          {{ (esEdicion() ? 'users.form.editTitle' : 'users.form.createTitle') | translate }}
+        </h2>
+        <p id="user-form-description">
+          @if (esEdicion()) {
+            {{ 'users.form.editDescription' | translate: { name: usuario()?.nombre } }}
+          } @else {
+            {{ 'users.form.createDescription' | translate }}
+          }
+        </p>
       </div>
       <button
         type="button"
@@ -36,7 +51,6 @@
     }
 
     <div class="user-form__body">
-      <!-- Nombre -->
       @let nombreTocado = nombreCtrl.touched || userForm.submitted;
       <div class="user-form__field">
         <label class="user-form__label" for="usuario-nombre">{{ 'users.form.nameLabel' | translate }}</label>
@@ -69,7 +83,6 @@
         }
       </div>
 
-      <!-- Correo -->
       @let emailTocado = emailCtrl.touched || userForm.submitted;
       @let emailConError = emailTocado && (emailCtrl.invalid || correoDuplicado());
       <div class="user-form__field">
@@ -101,7 +114,6 @@
         }
       </div>
 
-      <!-- Rol -->
       @let rolTocado = rolCtrl.touched || userForm.submitted;
       <div class="user-form__field">
         <label class="user-form__label" for="usuario-rol">{{ 'users.form.roleLabel' | translate }}</label>
@@ -126,93 +138,97 @@
         }
       </div>
 
-      <!-- Contraseña -->
-      @let contrasenaTocada = contrasenaCtrl.touched || userForm.submitted;
-      @let contrasenaConError = contrasenaTocada && (contrasenaCtrl.invalid || contrasenaMuyLarga());
-      <div class="user-form__field">
-        <label class="user-form__label" for="usuario-contrasena">{{ 'users.form.passwordLabel' | translate }}</label>
-        <div class="user-form__password">
+      @if (!esEdicion()) {
+        @let contrasenaTocada = contrasenaCtrl.touched || userForm.submitted;
+        @let contrasenaConError = contrasenaTocada && (contrasenaCtrl.invalid || contrasenaMuyLarga());
+        <div class="user-form__field">
+          <label class="user-form__label" for="usuario-contrasena">{{ 'users.form.passwordLabel' | translate }}</label>
+          <div class="user-form__password">
+            <input
+              id="usuario-contrasena"
+              name="contrasena"
+              [type]="mostrarContrasena ? 'text' : 'password'"
+              class="user-form__input"
+              [(ngModel)]="contrasena"
+              (ngModelChange)="limpiarError()"
+              #contrasenaCtrl="ngModel"
+              required
+              [minlength]="minContrasena"
+              autocomplete="new-password"
+              [placeholder]="'auth.passwordPlaceholder' | translate"
+              [attr.aria-invalid]="contrasenaConError"
+              [attr.aria-describedby]="contrasenaConError ? 'usuario-contrasena-error usuario-contrasena-hint' : 'usuario-contrasena-hint'"
+            />
+            <button
+              type="button"
+              class="user-form__toggle"
+              (click)="mostrarContrasena = !mostrarContrasena"
+              [attr.aria-pressed]="mostrarContrasena"
+              [attr.aria-label]="(mostrarContrasena ? 'auth.hidePassword' : 'auth.showPassword') | translate"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2.5 12s3.4-5.2 9.5-5.2 9.5 5.2 9.5 5.2-3.4 5.2-9.5 5.2S2.5 12 2.5 12Z" />
+                <circle cx="12" cy="12" r="2.4" />
+                @if (!mostrarContrasena) {
+                  <path d="m4 4 16 16" />
+                }
+              </svg>
+            </button>
+          </div>
+          <p class="user-form__hint" id="usuario-contrasena-hint">{{ 'users.form.passwordHint' | translate }}</p>
+          @if (contrasenaTocada) {
+            @if (contrasenaCtrl.hasError('required')) {
+              <p class="user-form__error" id="usuario-contrasena-error">{{ 'validation.passwordRequired' | translate }}</p>
+            } @else if (contrasenaCtrl.hasError('minlength')) {
+              <p class="user-form__error" id="usuario-contrasena-error">{{ 'validation.passwordMinLength' | translate }}</p>
+            } @else if (contrasenaMuyLarga()) {
+              <p class="user-form__error" id="usuario-contrasena-error">{{ 'validation.passwordMaxLength' | translate }}</p>
+            }
+          }
+        </div>
+
+        @let confirmacionTocada = confirmacionCtrl.touched || userForm.submitted;
+        @let confirmacionConError = confirmacionTocada && (confirmacionCtrl.invalid || contrasenasDistintas());
+        <div class="user-form__field">
+          <label class="user-form__label" for="usuario-confirmacion">{{ 'users.form.confirmLabel' | translate }}</label>
           <input
-            id="usuario-contrasena"
-            name="contrasena"
+            id="usuario-confirmacion"
+            name="confirmacion"
             [type]="mostrarContrasena ? 'text' : 'password'"
             class="user-form__input"
-            [(ngModel)]="contrasena"
+            [(ngModel)]="confirmacion"
             (ngModelChange)="limpiarError()"
-            #contrasenaCtrl="ngModel"
+            #confirmacionCtrl="ngModel"
             required
-            [minlength]="minContrasena"
             autocomplete="new-password"
-            [placeholder]="'auth.passwordPlaceholder' | translate"
-            [attr.aria-invalid]="contrasenaConError"
-            [attr.aria-describedby]="contrasenaConError ? 'usuario-contrasena-error usuario-contrasena-hint' : 'usuario-contrasena-hint'"
+            [attr.aria-invalid]="confirmacionConError"
+            [attr.aria-describedby]="confirmacionConError ? 'usuario-confirmacion-error' : null"
           />
-          <button
-            type="button"
-            class="user-form__toggle"
-            (click)="mostrarContrasena = !mostrarContrasena"
-            [attr.aria-pressed]="mostrarContrasena"
-            [attr.aria-label]="(mostrarContrasena ? 'auth.hidePassword' : 'auth.showPassword') | translate"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M2.5 12s3.4-5.2 9.5-5.2 9.5 5.2 9.5 5.2-3.4 5.2-9.5 5.2S2.5 12 2.5 12Z" />
-              <circle cx="12" cy="12" r="2.4" />
-              @if (!mostrarContrasena) {
-                <path d="m4 4 16 16" />
-              }
-            </svg>
-          </button>
+          @if (confirmacionTocada) {
+            @if (confirmacionCtrl.hasError('required')) {
+              <p class="user-form__error" id="usuario-confirmacion-error">{{ 'users.form.confirmRequired' | translate }}</p>
+            } @else if (contrasenasDistintas()) {
+              <p class="user-form__error" id="usuario-confirmacion-error">{{ 'users.form.confirmMismatch' | translate }}</p>
+            }
+          }
         </div>
-        <p class="user-form__hint" id="usuario-contrasena-hint">{{ 'users.form.passwordHint' | translate }}</p>
-        @if (contrasenaTocada) {
-          @if (contrasenaCtrl.hasError('required')) {
-            <p class="user-form__error" id="usuario-contrasena-error">{{ 'validation.passwordRequired' | translate }}</p>
-          } @else if (contrasenaCtrl.hasError('minlength')) {
-            <p class="user-form__error" id="usuario-contrasena-error">{{ 'validation.passwordMinLength' | translate }}</p>
-          } @else if (contrasenaMuyLarga()) {
-            <p class="user-form__error" id="usuario-contrasena-error">{{ 'validation.passwordMaxLength' | translate }}</p>
-          }
-        }
-      </div>
+      }
 
-      <!-- Confirmar contraseña -->
-      @let confirmacionTocada = confirmacionCtrl.touched || userForm.submitted;
-      @let confirmacionConError = confirmacionTocada && (confirmacionCtrl.invalid || contrasenasDistintas());
-      <div class="user-form__field">
-        <label class="user-form__label" for="usuario-confirmacion">{{ 'users.form.confirmLabel' | translate }}</label>
-        <input
-          id="usuario-confirmacion"
-          name="confirmacion"
-          [type]="mostrarContrasena ? 'text' : 'password'"
-          class="user-form__input"
-          [(ngModel)]="confirmacion"
-          (ngModelChange)="limpiarError()"
-          #confirmacionCtrl="ngModel"
-          required
-          autocomplete="new-password"
-          [attr.aria-invalid]="confirmacionConError"
-          [attr.aria-describedby]="confirmacionConError ? 'usuario-confirmacion-error' : null"
-        />
-        @if (confirmacionTocada) {
-          @if (confirmacionCtrl.hasError('required')) {
-            <p class="user-form__error" id="usuario-confirmacion-error">{{ 'users.form.confirmRequired' | translate }}</p>
-          } @else if (contrasenasDistintas()) {
-            <p class="user-form__error" id="usuario-confirmacion-error">{{ 'users.form.confirmMismatch' | translate }}</p>
-          }
-        }
-      </div>
+      @if (sinCambios()) {
+        <p class="user-form__note">{{ 'users.form.noChanges' | translate }}</p>
+      }
     </div>
 
     <footer class="user-form__footer">
       <button type="button" class="user-form__secondary" (click)="cancelar()" [disabled]="guardando()">
         {{ 'common.cancel' | translate }}
       </button>
-      <button type="submit" class="user-form__primary" [disabled]="guardando()">
+      <button type="submit" class="user-form__primary" [disabled]="guardando() || sinCambios()">
         @if (guardando()) {
           <span class="user-form__spinner" aria-hidden="true"></span>
           {{ 'users.form.saving' | translate }}
         } @else {
-          {{ 'users.form.save' | translate }}
+          {{ (esEdicion() ? 'users.form.update' : 'users.form.save') | translate }}
         }
       </button>
     </footer>

@@ -139,7 +139,14 @@
     "save": "Register user",
     "saving": "Saving...",
     "notAvailable": "The service to register users is not available.",
-    "created": "The user {{name}} was registered successfully."
+    "created": "The user {{name}} was registered successfully.",
+    "editTitle": "Edit user",
+    "editDescription": "Update the details of {{name}}.",
+    "update": "Save changes",
+    "passwordHintEdit": "Leave it blank to keep the current password. If you change it: between 8 and 72 characters.",
+    "noChanges": "There are no changes to save.",
+    "updated": "The user {{name}} was updated successfully.",
+    "editNotAvailable": "The user was not found or the service to edit users is not available."
     }
   },
   "inventory": {

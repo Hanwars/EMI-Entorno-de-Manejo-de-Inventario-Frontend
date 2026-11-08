@@ -139,7 +139,14 @@
     "save": "Registrar usuario",
     "saving": "Guardando...",
     "notAvailable": "El servicio para registrar usuarios no está disponible.",
-    "created": "El usuario {{name}} se registró correctamente."
+    "created": "El usuario {{name}} se registró correctamente.",
+    "editTitle": "Editar usuario",
+   "editDescription": "Actualiza los datos de {{name}}.",
+   "update": "Guardar cambios",
+   "passwordHintEdit": "Déjala en blanco para mantener la contraseña actual. Si la cambias: entre 8 y 72 caracteres.",
+   "noChanges": "No hay cambios para guardar.",
+   "updated": "El usuario {{name}} se actualizó correctamente.",
+   "editNotAvailable": "No se encontró el usuario o el servicio para editar usuarios no está disponible."
     }
   },
   "inventory": {

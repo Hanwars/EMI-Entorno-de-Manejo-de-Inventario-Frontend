@@ -23,10 +23,14 @@
     </article>
   </div>
 
-  <!-- Mensaje de éxito al registrar un usuario -->
   @if (usuarioRegistrado(); as nombre) {
     <div class="users-alert" role="status">
       {{ 'users.form.created' | translate: { name: nombre } }}
+    </div>
+  }
+  @if (usuarioActualizado(); as nombre) {
+    <div class="users-alert" role="status">
+      {{ 'users.form.updated' | translate: { name: nombre } }}
     </div>
   }
   @if (usuarioEliminado(); as nombre) {
@@ -35,9 +39,9 @@
     </div>
   }
 
-  <!-- Formulario para registrar un usuario (ventana modal) -->
   @if (formularioAbierto()) {
     <app-user-form
+      [usuario]="usuarioEnEdicion()"
       [roles]="roles()"
       [correosExistentes]="correos()"
       (guardado)="alGuardarUsuario($event)"
@@ -102,7 +106,11 @@
                 <td><span class="users-role">{{ nombreRol(user.rolId) }}</span></td>
                 <td>
                   <div class="users-actions">
-                    <button type="button" disabled [attr.aria-label]="('users.edit' | translate) + ' ' + user.nombre">
+                    <button
+                      type="button"
+                      [attr.aria-label]="('users.edit' | translate) + ' ' + user.nombre"
+                      (click)="editarUsuario(user)"
+                    >
                       <i class="users-icon fa-solid fa-pen-to-square" aria-hidden="true"></i>
                       <span>{{ 'users.edit' | translate }}</span>
                     </button>
