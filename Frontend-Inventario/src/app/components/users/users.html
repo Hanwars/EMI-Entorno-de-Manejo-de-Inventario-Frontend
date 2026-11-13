@@ -18,24 +18,32 @@
       </span>
       <div>
         <span class="users-summary__label">{{ 'users.registered' | translate }}</span>
-        <strong>{{ users().length }}</strong>
+        <strong>{{ cargando() || errorCarga() ? '—' : users().length }}</strong>
       </div>
     </article>
   </div>
 
-  @if (usuarioRegistrado(); as nombre) {
-    <div class="users-alert" role="status">
-      {{ 'users.form.created' | translate: { name: nombre } }}
-    </div>
-  }
-  @if (usuarioActualizado(); as nombre) {
-    <div class="users-alert" role="status">
-      {{ 'users.form.updated' | translate: { name: nombre } }}
-    </div>
-  }
-  @if (usuarioEliminado(); as nombre) {
-    <div class="users-alert" role="status">
-      {{ 'users.deleted' | translate: { name: nombre } }}
+  @if (aviso(); as a) {
+    <div
+      class="users-alert"
+      [class.users-alert--error]="a.tipo === 'error'"
+      [attr.role]="a.tipo === 'error' ? 'alert' : 'status'"
+    >
+      <i
+        class="users-alert__icon fa-solid"
+        [class.fa-circle-check]="a.tipo === 'exito'"
+        [class.fa-circle-exclamation]="a.tipo === 'error'"
+        aria-hidden="true"
+      ></i>
+      <span class="users-alert__text">{{ a.clave | translate: { name: a.nombre } }}</span>
+      <button
+        type="button"
+        class="users-alert__close"
+        (click)="cerrarAviso()"
+        [attr.aria-label]="'users.dismiss' | translate"
+      >
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
     </div>
   }
 
@@ -60,14 +68,16 @@
         <span class="visually-hidden">{{ 'users.search' | translate }}</span>
         <input
           type="search"
-          readonly
+          [value]="busqueda()"
+          (input)="actualizarBusqueda($event)"
+          [disabled]="cargando() || !!errorCarga()"
           [placeholder]="'users.searchPlaceholder' | translate"
         />
       </label>
     </div>
 
     <div class="users-table-wrap">
-      <table class="users-table">
+      <table class="users-table" [attr.aria-busy]="cargando()">
         <thead>
           <tr>
             <th scope="col">{{ 'users.id' | translate }}</th>
@@ -80,18 +90,36 @@
         <tbody>
           @if (cargando()) {
             <tr>
-              <td class="users-empty" colspan="5" role="status">{{ 'app.loading' | translate }}</td>
+              <td class="users-empty" colspan="5" role="status">
+                <span class="users-spinner" aria-hidden="true"></span>
+                {{ 'app.loading' | translate }}
+              </td>
             </tr>
           } @else if (errorCarga(); as clave) {
             <tr>
-              <td class="users-empty" colspan="5" role="alert">{{ clave | translate }}</td>
+              <td class="users-empty users-empty--error" colspan="5">
+                <p role="alert">{{ clave | translate }}</p>
+                <button type="button" class="users-retry" (click)="cargarUsuarios()">
+                  <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+                  {{ 'users.retry' | translate }}
+                </button>
+              </td>
             </tr>
           } @else if (users().length === 0) {
             <tr>
               <td class="users-empty" colspan="5">{{ 'users.empty' | translate }}</td>
             </tr>
+          } @else if (usuariosFiltrados().length === 0) {
+            <tr>
+              <td class="users-empty" colspan="5">
+                <p role="status">{{ 'users.noResults' | translate: { term: busqueda() } }}</p>
+                <button type="button" class="users-retry" (click)="limpiarBusqueda()">
+                  {{ 'users.clearSearch' | translate }}
+                </button>
+              </td>
+            </tr>
           } @else {
-            @for (user of users(); track user.usuarioId) {
+            @for (user of usuariosFiltrados(); track user.usuarioId) {
               <tr>
                 <td><span class="users-id">{{ formatoId(user.usuarioId) }}</span></td>
                 <td>
@@ -108,6 +136,7 @@
                   <div class="users-actions">
                     <button
                       type="button"
+                      [disabled]="eliminando()"
                       [attr.aria-label]="('users.edit' | translate) + ' ' + user.nombre"
                       (click)="editarUsuario(user)"
                     >
@@ -117,6 +146,8 @@
                     <button
                       class="users-actions__delete"
                       type="button"
+                      [disabled]="eliminando() || esUsuarioActual(user)"
+                      [attr.title]="esUsuarioActual(user) ? ('users.deleteSelf' | translate) : null"
                       [attr.aria-label]="('users.delete' | translate) + ' ' + user.nombre"
                       (click)="solicitarEliminacion(user)"
                     >
@@ -133,7 +164,7 @@
     </div>
     <div class="users-panel__footer">
       <span>
-        {{ 'users.showing' | translate: { visible: users().length, total: users().length } }}
+        {{ 'users.showing' | translate: { visible: usuariosFiltrados().length, total: users().length } }}
       </span>
       <div class="users-pagination" [attr.aria-label]="'users.pagination' | translate">
         <button type="button" disabled [attr.aria-label]="'users.previous' | translate">‹</button>
@@ -164,8 +195,19 @@
         <button type="button" class="users-delete-dialog__cancel" [disabled]="eliminando()" (click)="cancelarEliminacion()">
           {{ 'common.cancel' | translate }}
         </button>
-        <button type="button" class="users-delete-dialog__confirm" [disabled]="eliminando()" (click)="confirmarEliminacion()">
-          {{ 'common.confirm' | translate }}
+        <button
+          type="button"
+          class="users-delete-dialog__confirm"
+          [disabled]="eliminando()"
+          [attr.aria-busy]="eliminando()"
+          (click)="confirmarEliminacion()"
+        >
+          @if (eliminando()) {
+            <span class="users-spinner users-spinner--light" aria-hidden="true"></span>
+            {{ 'users.deleting' | translate }}
+          } @else {
+            {{ 'common.confirm' | translate }}
+          }
         </button>
       </div>
     </div>

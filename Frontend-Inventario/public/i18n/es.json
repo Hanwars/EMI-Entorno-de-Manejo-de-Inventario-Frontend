@@ -116,6 +116,14 @@
     "pagination": "Paginación del listado de usuarios",
     "previous": "Página anterior",
     "next": "Página siguiente",
+    "dismiss": "Cerrar mensaje",
+    "retry": "Reintentar",
+    "deleting": "Eliminando...",
+    "deleteConflict": "No se puede eliminar a {{name}} porque tiene registros asociados, como movimientos de inventario.",
+    "deleteNotFound": "El usuario {{name}} ya no existe. Se actualizó la lista.",
+    "deleteSelf": "No puedes eliminar tu propia cuenta.",
+    "noResults": "No hay usuarios que coincidan con «{{term}}».",
+    "clearSearch": "Limpiar búsqueda",
     
       "form": {
     "createTitle": "Registrar usuario",

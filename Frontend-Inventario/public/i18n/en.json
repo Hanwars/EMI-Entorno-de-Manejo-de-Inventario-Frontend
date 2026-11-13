@@ -116,6 +116,14 @@
     "pagination": "User list pagination",
     "previous": "Previous page",
     "next": "Next page",
+    "dismiss": "Dismiss message",
+    "retry": "Try again",
+    "deleting": "Deleting...",
+    "deleteConflict": "{{name}} cannot be deleted because it has related records, such as inventory movements.",
+    "deleteNotFound": "The user {{name}} no longer exists. The list was updated.",
+    "deleteSelf": "You cannot delete your own account.",
+    "noResults": "No users match “{{term}}”.",
+    "clearSearch": "Clear search",
 
        "form": {
     "createTitle": "Register user",

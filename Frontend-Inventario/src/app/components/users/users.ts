@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
   computed,
   inject,
@@ -14,6 +15,15 @@ import { OpcionRol, UserForm, UsuarioCreado, UsuarioEditable } from '../user-for
 import { UserService, UsuarioApi } from '../../services/user.service';
 import { RoleService } from '../../services/role.service';
 import { MensajeService } from '../../services/mensaje.service';
+import { AuthService } from '../../services/auth.service';
+
+interface Aviso {
+  tipo: 'exito' | 'error';
+  clave: string;
+  nombre?: string;
+}
+
+const DURACION_AVISO_MS = 8000;
 
 @Component({
   selector: 'app-users',
@@ -26,6 +36,8 @@ export class Users {
   private readonly userService = inject(UserService);
   private readonly roleService = inject(RoleService);
   private readonly mensajes = inject(MensajeService);
+  private readonly auth = inject(AuthService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly users = signal<UsuarioApi[]>([]);
 
@@ -44,13 +56,13 @@ export class Users {
 
   readonly usuarioEnEdicion = signal<UsuarioEditable | null>(null);
 
-  readonly usuarioRegistrado = signal<string | null>(null);
-
-  readonly usuarioActualizado = signal<string | null>(null);
-
-  readonly usuarioEliminado = signal<string | null>(null);
-
   readonly usuarioPorEliminar = signal<UsuarioApi | null>(null);
+
+  readonly aviso = signal<Aviso | null>(null);
+
+  readonly busqueda = signal('');
+
+  private temporizadorAviso: ReturnType<typeof setTimeout> | null = null;
 
   readonly correos = computed(() =>
     this.users()
@@ -58,9 +70,23 @@ export class Users {
       .filter((email): email is string => !!email),
   );
 
+  readonly usuariosFiltrados = computed(() => {
+    const termino = this.busqueda().trim().toLowerCase();
+    if (!termino) {
+      return this.users();
+    }
+    return this.users().filter(
+      (user) =>
+        user.nombre.toLowerCase().includes(termino) ||
+        (user.email ?? '').toLowerCase().includes(termino) ||
+        this.nombreRol(user.rolId).toLowerCase().includes(termino),
+    );
+  });
+
   constructor() {
     this.cargarUsuarios();
     this.cargarRoles();
+    this.destroyRef.onDestroy(() => this.cancelarTemporizador());
   }
 
   cargarUsuarios(): void {
@@ -100,20 +126,47 @@ export class Users {
       .join('');
   }
 
-  private limpiarMensajes(): void {
-    this.usuarioRegistrado.set(null);
-    this.usuarioActualizado.set(null);
-    this.usuarioEliminado.set(null);
+  esUsuarioActual(usuario: UsuarioApi): boolean {
+    return this.auth.currentUser()?.id === usuario.usuarioId;
+  }
+
+  actualizarBusqueda(event: Event): void {
+    this.busqueda.set((event.target as HTMLInputElement).value);
+  }
+
+  limpiarBusqueda(): void {
+    this.busqueda.set('');
+  }
+
+  mostrarAviso(aviso: Aviso): void {
+    this.cancelarTemporizador();
+    this.aviso.set(aviso);
+
+    if (aviso.tipo === 'exito') {
+      this.temporizadorAviso = setTimeout(() => this.aviso.set(null), DURACION_AVISO_MS);
+    }
+  }
+
+  cerrarAviso(): void {
+    this.cancelarTemporizador();
+    this.aviso.set(null);
+  }
+
+  private cancelarTemporizador(): void {
+    if (this.temporizadorAviso) {
+      clearTimeout(this.temporizadorAviso);
+      this.temporizadorAviso = null;
+    }
   }
 
   abrirFormulario(): void {
-    this.limpiarMensajes();
+    this.cerrarAviso();
     this.usuarioEnEdicion.set(null);
     this.formularioAbierto.set(true);
   }
 
   editarUsuario(usuario: UsuarioApi): void {
-    this.limpiarMensajes();
+    this.cerrarAviso();
     this.usuarioEnEdicion.set({
       usuario_id: usuario.usuarioId,
       nombre: usuario.nombre,
@@ -132,18 +185,19 @@ export class Users {
     const eraEdicion = this.usuarioEnEdicion() !== null;
 
     this.cerrarFormulario();
-    this.limpiarMensajes();
-
-    if (eraEdicion) {
-      this.usuarioActualizado.set(usuario.nombre);
-    } else {
-      this.usuarioRegistrado.set(usuario.nombre);
-    }
+    this.mostrarAviso({
+      tipo: 'exito',
+      clave: eraEdicion ? 'users.form.updated' : 'users.form.created',
+      nombre: usuario.nombre,
+    });
 
     this.cargarUsuarios();
   }
 
   solicitarEliminacion(usuario: UsuarioApi): void {
+    if (this.esUsuarioActual(usuario)) {
+      return;
+    }
     this.usuarioPorEliminar.set(usuario);
     this.dialogoEliminacion().nativeElement.showModal();
   }
@@ -170,19 +224,28 @@ export class Users {
       .subscribe({
         next: () => {
           this.users.update((users) => users.filter((user) => user.usuarioId !== usuario.usuarioId));
-          this.limpiarMensajes();
-          this.usuarioEliminado.set(usuario.nombre);
           this.cerrarDialogoEliminacion();
+          this.mostrarAviso({ tipo: 'exito', clave: 'users.deleted', nombre: usuario.nombre });
         },
         error: (err: HttpErrorResponse) => {
           this.cerrarDialogoEliminacion();
-          this.mensajes.mostrarErrorHttp(err);
+          this.mostrarAviso({ tipo: 'error', clave: this.claveErrorEliminacion(err), nombre: usuario.nombre });
 
           if (err.status === 404) {
             this.cargarUsuarios();
           }
         },
       });
+  }
+
+  private claveErrorEliminacion(err: HttpErrorResponse): string {
+    if (err.status === 409) {
+      return 'users.deleteConflict';
+    }
+    if (err.status === 404) {
+      return 'users.deleteNotFound';
+    }
+    return this.mensajes.claveErrorHttp(err);
   }
 
   private cerrarDialogoEliminacion(): void {
