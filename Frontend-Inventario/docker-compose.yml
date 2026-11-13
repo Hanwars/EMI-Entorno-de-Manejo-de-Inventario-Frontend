@@ -1,0 +1,10 @@
+services:
+  emi-nginx:
+    image: nginx:alpine
+    container_name: emi-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - "${EMI_DIST_DIR:-./dist/Frontend-Inventario}:/usr/share/nginx/html:ro"
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
