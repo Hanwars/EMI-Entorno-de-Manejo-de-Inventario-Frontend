@@ -16,6 +16,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Observable, finalize, map } from 'rxjs';
 import { Usuario } from '../../models/usuario';
 import { CambiosUsuario, UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 
 export interface OpcionRol {
   role_id: number;
@@ -40,6 +41,7 @@ export type UsuarioEditable = UsuarioCreado;
 })
 export class UserForm implements OnInit {
   private readonly userService = inject(UserService);
+  private readonly auth = inject(AuthService);
 
   readonly usuario = input<UsuarioEditable | null>(null);
   readonly roles = input<OpcionRol[]>([]);
@@ -81,6 +83,11 @@ export class UserForm implements OnInit {
     return this.usuario() !== null;
   }
 
+  esUsuarioActual(): boolean {
+    const usuario = this.usuario();
+    return usuario !== null && this.auth.currentUser()?.id === usuario.usuario_id;
+  }
+
   nombreNormalizado(): string {
     return this.nombre.trim().replace(/\s+/g, ' ');
   }
@@ -119,7 +126,7 @@ export class UserForm implements OnInit {
     if (this.emailNormalizado() !== usuario.email.trim().toLowerCase()) {
       cambios.email = this.emailNormalizado();
     }
-    if (this.rolId !== null && this.rolId !== usuario.rol_id) {
+    if (!this.esUsuarioActual() && this.rolId !== null && this.rolId !== usuario.rol_id) {
       cambios.rolId = this.rolId;
     }
     return cambios;

@@ -23,23 +23,29 @@
     </div>
     <div>
       <span class="roles-summary__label">{{ 'roles.registered' | translate }}</span>
-      <strong>{{ estadoVista === 'datos' ? roles.length : '—' }}</strong>
+      <strong>{{ estadoVista() === 'cargando' ? '—' : roles().length }}</strong>
     </div>
     <span class="roles-summary__note">{{ 'roles.summaryNote' | translate }}</span>
   </div>
 
-  <!-- Mensaje de éxito al registrar o editar un rol -->
   @if (mensajeExito(); as mensaje) {
     <div class="roles-alert" role="status">
       {{ mensaje.clave | translate: { name: mensaje.nombre } }}
     </div>
   }
 
-  <!-- Formulario para registrar o editar un rol (ventana modal) -->
+  @if (mensajeError(); as claveError) {
+    @if (estadoVista() !== 'error') {
+      <div class="roles-alert roles-alert--error" role="alert">
+        {{ claveError | translate }}
+      </div>
+    }
+  }
+
   @if (formularioAbierto()) {
     <app-role-form
       [rol]="rolEnEdicion()"
-      [rolesExistentes]="roles"
+      [rolesExistentes]="roles()"
       (guardado)="alGuardarRol($event)"
       (cancelado)="cerrarFormulario()"
     />
@@ -57,21 +63,41 @@
           <path d="m21 21-4.3-4.3" />
         </svg>
         <span class="visually-hidden">{{ 'roles.search' | translate }}</span>
-        <input type="search" [placeholder]="'roles.search' | translate" disabled />
+        <input
+          type="search"
+          [placeholder]="'roles.search' | translate"
+          [value]="busqueda()"
+          (input)="busqueda.set($any($event.target).value)"
+        />
       </label>
     </div>
 
-    @if (estadoVista === 'cargando') {
+    @if (estadoVista() === 'cargando') {
       <div class="roles-loading" role="status" aria-live="polite">
         <span class="roles-spinner" aria-hidden="true"></span>
         <span>{{ 'roles.loading' | translate }}</span>
       </div>
-    } @else if (estadoVista === 'vacio' || roles.length === 0) {
+    } @else if (estadoVista() === 'error') {
       <div class="roles-empty">
-        <div class="roles-empty__icon" aria-hidden="true">▤</div>
-        <h3>{{ 'roles.emptyTitle' | translate }}</h3>
-        <p>{{ 'roles.emptyDescription' | translate }}</p>
-        <button class="roles-secondary" type="button" (click)="abrirFormulario()">{{ 'roles.createFirst' | translate }}</button>
+        @if (mensajeError(); as claveError) {
+          <h3>{{ claveError | translate }}</h3>
+        }
+        <button class="roles-secondary" type="button" (click)="cargarRoles()">
+          {{ 'roles.retry' | translate }}
+        </button>
+      </div>
+    } @else if (rolesFiltrados().length === 0) {
+      <div class="roles-empty">
+        @if (roles().length === 0) {
+          <div class="roles-empty__icon" aria-hidden="true">▤</div>
+          <h3>{{ 'roles.emptyTitle' | translate }}</h3>
+          <p>{{ 'roles.emptyDescription' | translate }}</p>
+          <button class="roles-secondary" type="button" (click)="abrirFormulario()">
+            {{ 'roles.createFirst' | translate }}
+          </button>
+        } @else {
+          <h3>{{ 'roles.noResults' | translate }}</h3>
+        }
       </div>
     } @else {
       <div class="roles-table-wrap">
@@ -80,14 +106,14 @@
             <tr>
               <th scope="col">{{ 'roles.id' | translate }}</th>
               <th scope="col">{{ 'roles.name' | translate }}</th>
-              <th scope="col">{{ 'roles.users' | translate }}</th>
-              <th scope="col">{{ 'roles.status' | translate }}</th>
-              <th scope="col" class="roles-table__actions-heading">{{ 'roles.actions' | translate }}</th>
+              <th scope="col" class="roles-table__actions-heading">
+                {{ 'roles.actions' | translate }}
+              </th>
             </tr>
           </thead>
           <tbody>
-            @for (rol of roles; track rol.role_id) {
-              <tr>
+            @for (rol of rolesFiltrados(); track rol.role_id) {
+              <tr [class.roles-table__row--restricted]="esRolProtegido(rol)">
                 <td>
                   <span class="roles-id">{{ rol.role_id < 10 ? '0' + rol.role_id : rol.role_id }}</span>
                 </td>
@@ -97,22 +123,12 @@
                     <span class="roles-name">{{ rol.nombre }}</span>
                   </div>
                 </td>
-                <td>{{ $any(rol).usuarios ?? '—' }}</td>
-                <td>
-                  @let estado = $any(rol).estado;
-                  @if (estado) {
-                    <span class="roles-status" [class.roles-status--restricted]="estado === 'restringido'">
-                      {{ (estado === 'restringido' ? 'roles.statusRestricted' : 'roles.statusActive') | translate }}
-                    </span>
-                  } @else {
-                    <span class="roles-muted">—</span>
-                  }
-                </td>
                 <td>
                   <div class="roles-actions">
                     <button
                       type="button"
                       class="roles-action"
+                      [disabled]="esRolProtegido(rol)"
                       [attr.aria-label]="('common.edit' | translate) + ': ' + rol.nombre"
                       (click)="editarRol(rol)"
                     >
@@ -122,22 +138,20 @@
                       </svg>
                       <span class="roles-action__label">{{ 'common.edit' | translate }}</span>
                     </button>
-                    <button type="button" class="roles-action" [attr.aria-label]="'common.delete' | translate" disabled>
+                    <button
+                      type="button"
+                      class="roles-action roles-action--danger"
+                      [disabled]="esRolProtegido(rol)"
+                      [attr.aria-label]="('roles.deleteRole' | translate: { name: rol.nombre })"
+                      (click)="abrirConfirmacionEliminar(rol)"
+                    >
                       <svg class="roles-icon" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M3 6h18" />
                         <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
                         <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                        <path d="M10 11v6" />
-                        <path d="M14 11v6" />
+                        <path d="M10 11v6M14 11v6" />
                       </svg>
                       <span class="roles-action__label">{{ 'common.delete' | translate }}</span>
-                    </button>
-                    <button type="button" class="roles-more" [attr.aria-label]="'roles.moreActions' | translate" disabled>
-                      <svg class="roles-icon roles-icon--dots" viewBox="0 0 24 24" aria-hidden="true">
-                        <circle cx="5" cy="12" r="1" />
-                        <circle cx="12" cy="12" r="1" />
-                        <circle cx="19" cy="12" r="1" />
-                      </svg>
                     </button>
                   </div>
                 </td>
@@ -147,13 +161,71 @@
         </table>
       </div>
       <div class="roles-panel__footer">
-        <span>{{ 'roles.showing' | translate:{ count: roles.length } }}</span>
-        <div class="roles-pagination" aria-label="{{ 'roles.pagination' | translate }}">
-          <button type="button" disabled aria-label="{{ 'roles.previous' | translate }}">‹</button>
-          <span>1</span>
-          <button type="button" disabled aria-label="{{ 'roles.next' | translate }}">›</button>
-        </div>
+        <span>{{ 'roles.registered' | translate }}: {{ roles().length }}</span>
       </div>
     }
   </section>
 </section>
+
+@if (rolAEliminar(); as rol) {
+  <div class="roles-delete-backdrop" role="presentation" (click)="cerrarConfirmacionEliminar()">
+    <section
+      class="roles-delete-dialog"
+      role="alertdialog"
+      aria-modal="true"
+      aria-labelledby="roles-delete-title"
+      (click)="$event.stopPropagation()"
+    >
+      <header class="roles-delete-dialog__header">
+        <div class="roles-delete-dialog__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 9v4m0 4h.01M10.3 3.9 1.9 18.2A1.8 1.8 0 0 0 3.5 21h17a1.8 1.8 0 0 0 1.6-2.8L13.7 3.9a2 2 0 0 0-3.4 0Z" />
+          </svg>
+        </div>
+        <div class="roles-delete-dialog__titles">
+          <h2 id="roles-delete-title">
+            {{ 'roles.deleteRole' | translate: { name: rol.nombre } }}
+          </h2>
+          <p>{{ 'roles.confirmDelete' | translate: { name: rol.nombre } }}</p>
+        </div>
+        <button
+          type="button"
+          class="roles-delete-dialog__close"
+          [disabled]="eliminando()"
+          (click)="cerrarConfirmacionEliminar()"
+          [attr.aria-label]="'common.close' | translate"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m18 6-12 12M6 6l12 12" /></svg>
+        </button>
+      </header>
+
+      @if (mensajeError(); as claveError) {
+        <div class="roles-delete-dialog__error" role="alert">{{ claveError | translate }}</div>
+      }
+
+      <footer class="roles-delete-dialog__footer">
+        <button
+          type="button"
+          class="roles-delete-dialog__secondary"
+          [disabled]="eliminando()"
+          (click)="cerrarConfirmacionEliminar()"
+        >
+          {{ 'common.cancel' | translate }}
+        </button>
+        <button
+          type="button"
+          class="roles-delete-dialog__danger"
+          [disabled]="eliminando()"
+          (click)="confirmarEliminacion()"
+        >
+          @if (eliminando()) {
+            <span class="roles-spinner roles-spinner--small" aria-hidden="true"></span>
+            {{ 'roles.deleting' | translate }}
+          } @else {
+            {{ 'common.delete' | translate }}
+          }
+        </button>
+      </footer>
+    </section>
+  </div>
+}

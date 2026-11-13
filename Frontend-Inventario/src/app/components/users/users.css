@@ -2,7 +2,7 @@
   --users-primary: #3f6fc4;
   --users-primary-soft: #e8effb;
   --users-primary-shadow: rgba(63, 111, 196, 0.22);
-  --users-text: #111820;
+  --users-text: #17212b;
   --users-muted: #4b5661;
   --users-border: #d8dde3;
 
@@ -66,7 +66,9 @@
   text-decoration: none;
   white-space: nowrap;
   box-shadow: 0 8px 18px var(--users-primary-shadow);
-  transition: background 160ms ease, transform 160ms ease;
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
 }
 
 .users-primary:hover,
@@ -91,7 +93,7 @@
 
 .users-summary-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   margin-bottom: 24px;
 }
@@ -252,6 +254,12 @@
   background: #f6f7f8;
 }
 
+/* La cuenta con sesión activa se distingue como una fila protegida. */
+.users-table tbody tr.users-table__row--restricted,
+.users-table tbody tr.users-table__row--restricted:hover {
+  background: #eceff2;
+}
+
 .users-table__actions-heading {
   text-align: right;
 }
@@ -346,7 +354,7 @@
   height: 6px;
   border-radius: 50%;
   background: #4caf7d;
-  content: '';
+  content: "";
 }
 
 .users-status--inactive {
@@ -381,11 +389,15 @@
   white-space: nowrap;
   opacity: 1;
   cursor: default;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    opacity 160ms ease;
 }
 
 .users-actions button:not(:disabled) {
   cursor: pointer;
-  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
 }
 
 .users-actions button:not(:disabled):hover {
@@ -589,7 +601,6 @@
   }
 }
 
-
 .users-primary {
   border: 0;
   font-family: inherit;
@@ -600,7 +611,6 @@
   outline: 2px solid var(--emi-primary-light, #4d91dc);
   outline-offset: 3px;
 }
-
 
 .users-alert {
   margin: 0 0 18px;

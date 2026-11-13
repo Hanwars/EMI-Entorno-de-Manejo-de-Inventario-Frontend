@@ -124,6 +124,7 @@
           [(ngModel)]="rolId"
           (ngModelChange)="limpiarError()"
           #rolCtrl="ngModel"
+          [disabled]="esUsuarioActual()"
           required
           [attr.aria-invalid]="rolTocado && rolCtrl.invalid"
           [attr.aria-describedby]="rolTocado && rolCtrl.invalid ? 'usuario-rol-error' : null"

@@ -120,7 +120,7 @@
             </tr>
           } @else {
             @for (user of usuariosFiltrados(); track user.usuarioId) {
-              <tr>
+              <tr [class.users-table__row--restricted]="esUsuarioActual(user)">
                 <td><span class="users-id">{{ formatoId(user.usuarioId) }}</span></td>
                 <td>
                   <div class="users-identity">
